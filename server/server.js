@@ -5,8 +5,6 @@ const app = express();
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 
-console.log('process.env.PORT: ', process.env.PORT);
-
 const PORT = process.env.PORT || 3001;
 
 app.use(bodyParser.json());
