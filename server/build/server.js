@@ -18,7 +18,9 @@ var app = (0, _express2.default)();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
-var PORT = process.env.PORT || 3001;
+var PORT = process.env.PORT || 3003;
+
+console.log('process.env.PORT: ', process.env.PORT);
 
 app.use(_bodyParser2.default.json());
 app.use(_bodyParser2.default.urlencoded({ extended: false }));

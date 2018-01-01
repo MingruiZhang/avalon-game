@@ -13,7 +13,7 @@
     "rimraf": "^2.5.4"
   },
   "scripts": {
-    "build": "concurrently \"cd client && npm build\" \"cd server && npm build\"",
+    "build": "concurrently \"cd client && npm run build\" \"cd server && npm run build\"",
     "clean":
       "concurrently \"rimraf node_modules\" \"cd client && rimraf node_modules build\" \"cd server && rimraf node_modules build\"",
     "heroku-postbuild": "npm build",

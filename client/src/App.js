@@ -25,6 +25,7 @@ class App extends Component {
     return (
       <div>
         <div className="App">
+          <div> process.env.NODE_ENV is {kk}</div>
           <p className="App-intro">This is the timer value: {this.state.timestamp}</p>
         </div>
       </div>

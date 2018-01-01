@@ -7,6 +7,8 @@ const io = require('socket.io')(server);
 
 const PORT = process.env.PORT || 3003;
 
+console.log('process.env.PORT: ', process.env.PORT);
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
