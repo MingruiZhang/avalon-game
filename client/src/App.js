@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import io from 'socket.io-client';
 
-const socket = process.env.NODE_ENV && process.env.NODE_ENV === 'development' ? io('http://localhost:3001') : io();
+const socket = process.env.NODE_ENV && process.env.NODE_ENV === 'development' ? io('http://localhost:3005') : io();
 const kk = process.env.NODE_ENV;
 
 class App extends Component {
