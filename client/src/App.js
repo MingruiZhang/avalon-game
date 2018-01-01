@@ -4,6 +4,7 @@ import io from 'socket.io-client';
 console.log('process.env.NODE_ENV: ', process.env.NODE_ENV);
 
 const socket = process.env.NODE_ENV && process.env.NODE_ENV === 'development' ? io('http://localhost:3001') : io();
+const kk = process.env.NODE_ENV;
 
 class App extends Component {
   state = { timestamp: 'no timestamp yet' };
@@ -25,8 +26,8 @@ class App extends Component {
   render() {
     return (
       <div>
-        <div>Current env is {process.env.NODE_ENV} </div>
         <div className="App">
+          <div>Current env is {kk}</div>
           <p className="App-intro">This is the timer value: {this.state.timestamp}</p>
         </div>
       </div>
