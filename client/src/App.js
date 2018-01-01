@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import io from 'socket.io-client';
 
-const socket = io('http://localhost:3001');
+const socket = process.env.NODE_ENV && process.env.NODE_ENV === 'development' ? io('http://localhost:3001') : io();
 
 class App extends Component {
-  state = {timestamp: 'no timestamp yet'}
+  state = { timestamp: 'no timestamp yet' };
 
   constructor(props) {
     super(props);
@@ -18,7 +18,7 @@ class App extends Component {
   subscribeToTimer = cb => {
     socket.on('timer', timestamp => cb(null, timestamp));
     socket.emit('subscribeToTimer', 1000);
-  }
+  };
 
   render() {
     return (
