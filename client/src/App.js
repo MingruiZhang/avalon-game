@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import io from 'socket.io-client';
 
-const socket = process.env.NODE_ENV && process.env.NODE_ENV === 'development' ? io('http://localhost:3005') : io();
-const kk = process.env.NODE_ENV;
+const socket = process.env.NODE_ENV && process.env.NODE_ENV === 'development' ? io('http://localhost:3001') : io();
 
 class App extends Component {
   state = { timestamp: 'no timestamp yet' };
@@ -25,7 +24,6 @@ class App extends Component {
     return (
       <div>
         <div className="App">
-          <div>process.env.NODE_ENV is {kk}</div>
           <p className="App-intro">This is the timer value: {this.state.timestamp}</p>
         </div>
       </div>
