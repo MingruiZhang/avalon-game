@@ -53,9 +53,11 @@
     "node": "8.9.0"
   },
   "scripts": {
-    "start": "concurrently 'npm run react' 'npm run server'",
-    "react": "node scripts/start.js",
-    "server": "nodemon src/server/server.js",
+    "production": "concurrently 'npm run react-server' 'npm run io-server'",
+    "local": "concurrently 'npm run react-server' 'npm run io-server-local'",
+    "react-server": "node scripts/start.js",
+    "io-server": "node src/server/server.js",
+    "io-server-local": "nodemon src/server/server.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom"
   },
