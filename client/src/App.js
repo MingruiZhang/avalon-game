@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import io from 'socket.io-client';
 
+console.log('process.env.NODE_ENV: ', process.env.NODE_ENV);
+
 const socket = process.env.NODE_ENV && process.env.NODE_ENV === 'development' ? io('http://localhost:3001') : io();
 
 class App extends Component {
@@ -23,6 +25,7 @@ class App extends Component {
   render() {
     return (
       <div>
+        <div>Current env is {process.env.NODE_ENV} </div>
         <div className="App">
           <p className="App-intro">This is the timer value: {this.state.timestamp}</p>
         </div>
