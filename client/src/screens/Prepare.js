@@ -27,6 +27,7 @@ class Prepare extends Component {
             return <li key={`player-${index}`}>{player.name}</li>;
           })}
         </ul>
+        <button onClick={this.handlePrepare}>I'm ready</button>
         <h1>Logs:</h1>
         <ul>
           {messages.map((message, index) => {
