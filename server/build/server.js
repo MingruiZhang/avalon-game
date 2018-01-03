@@ -12,6 +12,10 @@ var _path = require('path');
 
 var _path2 = _interopRequireDefault(_path);
 
+var _socketManager = require('./socketManager');
+
+var _socketManager2 = _interopRequireDefault(_socketManager);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var app = (0, _express2.default)();
@@ -30,14 +34,7 @@ app.use('/*', staticFiles);
 app.set('port', PORT);
 
 // Socket.io connection
-io.on('connection', function (client) {
-  client.on('subscribeToTimer', function (interval) {
-    console.log('client is subscribing to timer with interval ', interval);
-    setInterval(function () {
-      client.emit('timer', new Date());
-    }, interval);
-  });
-});
+io.on('connection', _socketManager2.default);
 
 server.listen(PORT, function () {
   console.log('Server listening at port %d', PORT);
