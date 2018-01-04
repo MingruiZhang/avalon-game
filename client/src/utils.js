@@ -24,10 +24,3 @@ export const createEmitSocket = (eventName, data) => {
  */
 export const fetchAvatar = avatarId =>
   require(`./assets/avatars/avatar${avatarId}.png`);
-
-/**
- * Styles
- */
-// export const fontStyle = {
-
-// }

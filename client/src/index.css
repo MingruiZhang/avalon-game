@@ -1,0 +1,23 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/**
+ * Here are all the universal stylings to the app
+ * 1. Set backgound image to our assets
+ */
+body {
+  background: url('./assets/background/background.jpg') no-repeat top center; /* 1 */
+  background-size: cover; /* 1 */
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
