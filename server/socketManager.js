@@ -1,10 +1,8 @@
+// This is global scope
 let playerId = 0;
 const players = [];
 
-const doesNameExist = name =>
-  players.some(player => {
-    player.name === name;
-  });
+const doesNameExist = name => players.some(player => player.name === name);
 
 const removePlayerIndexByName = name => {
   const index = players.findIndex(player => player.name === name);
@@ -12,41 +10,55 @@ const removePlayerIndexByName = name => {
 };
 
 const socketManager = socket => {
+  // This will be scoped to each individual socket(user)
   let playerInfo = undefined;
 
-  socket.on('clientPlayerJoined', data => {
+  socket.on('clientPlayerJoinedGame', data => {
     const { name } = data;
-    if (doesNameExist(name)) {
-      console.log(`client player ${name} have name conflict`);
-
-      socket.emit('serverPlayerJoinedError', { error: 'This name already exists in the game.' });
+    if (!name.length) {
+      socket.emit('serverPlayerJoinedError', {
+        error: 'Please enter your nickname'
+      });
+    } else if (doesNameExist(name)) {
+      socket.emit('serverPlayerJoinedError', {
+        error: 'Nickname already taken in the game'
+      });
     } else {
-      console.log(`client player ${name} have joined the game`);
-
-      playerInfo = { ...data, id: playerId++ };
+      playerInfo = { ...data, playerId: playerId++, isReady: false };
       players.push(playerInfo);
 
       socket.emit('serverPlayerJoinedSuccess', {
         playerInfo,
         players,
-        message: `you have joined the game`
+        message: `you joined the game`
       });
       socket.broadcast.emit('serverUpdatePlayers', {
         players,
-        message: `player ${name} have joined the game`
+        message: `${name} joined the game`
       });
     }
   });
 
+  socket.on('clientPlayerToggleReady', () => {
+    playerInfo.isReady = !playerInfo.isReady;
+
+    socket.broadcast.emit('serverUpdatePlayers', {
+      playerInfo,
+      players
+    });
+    socket.emit('serverUpdatePlayers', {
+      playerInfo,
+      players
+    });
+  });
+
   socket.on('disconnect', () => {
     if (playerInfo) {
-      console.log(`client player ${playerInfo.name} have left the game`);
-
       removePlayerIndexByName(playerInfo.name);
 
       socket.broadcast.emit('serverUpdatePlayers', {
         players,
-        message: `player ${playerInfo.name} have left the game`
+        message: `${playerInfo.name} left the game`
       });
     }
   });

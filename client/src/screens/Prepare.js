@@ -1,14 +1,19 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { object, array, func } from 'prop-types';
-import { onPlayersUpdateAction } from '../actions/preGameActions';
+import {
+  onPlayersUpdateAction,
+  toggledReadyStateAction
+} from '../actions/preGameActions';
+import Player from '../components/Player';
 
 class Prepare extends Component {
   static propTypes = {
     myPlayer: object.isRequired,
     players: array.isRequired,
     messages: array.isRequired,
-    playersUpdateListener: func.isRequired
+    playersUpdateListener: func.isRequired,
+    toggleReadyState: func.isRequired
   };
 
   constructor(props) {
@@ -17,23 +22,49 @@ class Prepare extends Component {
     playersUpdateListener();
   }
 
-  render() {
-    const { players, messages } = this.props;
+  renderPlayers = () => {
+    const { myPlayer, players } = this.props;
     return (
       <div>
-        <h1>Players:</h1>
-        <ul>
-          {players.map((player, index) => {
-            return <li key={`player-${index}`}>{player.name}</li>;
+        <h3>Players:</h3>
+        <div>
+          {players.map(player => {
+            return (
+              <Player
+                key={`player-${player.playerId}`}
+                player={player}
+                isMe={player.playerId === myPlayer.playerId}
+              />
+            );
           })}
-        </ul>
-        <button onClick={this.handlePrepare}>I'm ready</button>
-        <h1>Logs:</h1>
+        </div>
+      </div>
+    );
+  };
+
+  renderLogs = () => {
+    const { messages } = this.props;
+    return (
+      <div>
+        <h3>Logs:</h3>
         <ul>
           {messages.map((message, index) => {
             return <li key={index}>{message}</li>;
           })}
         </ul>
+      </div>
+    );
+  };
+
+  render() {
+    const { myPlayer, toggleReadyState } = this.props;
+    return (
+      <div>
+        {this.renderPlayers()}
+        <button onClick={toggleReadyState}>
+          {myPlayer.isReady ? "I'm not ready" : "I'm ready"}
+        </button>
+        {this.renderLogs()}
       </div>
     );
   }
@@ -49,7 +80,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    playersUpdateListener: () => dispatch(onPlayersUpdateAction())
+    playersUpdateListener: () => dispatch(onPlayersUpdateAction()),
+    toggleReadyState: () => dispatch(toggledReadyStateAction())
   };
 };
 

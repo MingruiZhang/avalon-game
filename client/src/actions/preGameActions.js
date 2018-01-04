@@ -1,21 +1,28 @@
-import socket from '../socket';
+import { createOnSocketCallBack, createEmitSocket } from '../utils';
 
-export const joinGameAction = playerData => {
+export const joinGameAction = data => {
   return dispatch => {
-    socket.on('serverPlayerJoinedSuccess', payload => {
+    createOnSocketCallBack('serverPlayerJoinedSuccess', payload => {
       dispatch({ type: 'JOIN_GAME_SUCCESS', payload });
     });
-    socket.on('serverPlayerJoinedError', payload => {
+    createOnSocketCallBack('serverPlayerJoinedError', payload => {
       dispatch({ type: 'JOIN_GAME_ERROR', payload });
     });
-    socket.emit('clientPlayerJoined', playerData);
+    createEmitSocket('clientPlayerJoinedGame', data);
   };
 };
 
 export const onPlayersUpdateAction = () => {
   return dispatch => {
-    socket.on('serverUpdatePlayers', payload => {
+    createOnSocketCallBack('serverUpdatePlayers', payload => {
       dispatch({ type: 'PLAYERS_UPDATED', payload });
     });
+  };
+};
+
+export const toggledReadyStateAction = () => {
+  return dispatch => {
+    createEmitSocket('clientPlayerToggleReady');
+    dispatch({ type: 'TOGGLE_READY_STATE' });
   };
 };

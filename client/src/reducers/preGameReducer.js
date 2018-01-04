@@ -6,6 +6,10 @@ const DEFAULT_STATE = {
   messages: []
 };
 
+const modifyMessageList = (oldMessage, newMessage) => {
+  return [...oldMessage, newMessage].filter(msg => !!msg).slice(-5);
+};
+
 const preGameReducer = (state = DEFAULT_STATE, action) => {
   switch (action.type) {
     case 'PLAYERS_UPDATED':
@@ -13,14 +17,14 @@ const preGameReducer = (state = DEFAULT_STATE, action) => {
       return {
         ...state,
         players: action.payload.players,
-        messages: [...state.messages, action.payload.message]
+        messages: modifyMessageList(state.messages, action.payload.message)
       };
     case 'JOIN_GAME_SUCCESS':
       return {
         ...state,
-        players: action.payload.players,
         myPlayer: action.payload.playerInfo,
-        messages: [...state.messages, action.payload.message],
+        players: action.payload.players,
+        messages: modifyMessageList(state.messages, action.payload.message),
         joinedGame: true
       };
     case 'JOIN_GAME_ERROR':
@@ -28,6 +32,11 @@ const preGameReducer = (state = DEFAULT_STATE, action) => {
         ...state,
         error: action.payload.error,
         joinedGame: false
+      };
+    case 'TOGGLE_READY_STATE':
+      return {
+        ...state,
+        myPlayer: { ...state.myPlayer, isReady: !state.myPlayer.isReady }
       };
     default:
       return state;

@@ -10,6 +10,7 @@ var _extends3 = _interopRequireDefault(_extends2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+// This is global scope
 var playerId = 0;
 var players = [];
 
@@ -27,42 +28,50 @@ var removePlayerIndexByName = function removePlayerIndexByName(name) {
 };
 
 var socketManager = function socketManager(socket) {
+  // This will be scoped to each individual socket(user)
   var playerInfo = undefined;
 
-  socket.on('clientPlayerJoined', function (data) {
+  socket.on('clientPlayerJoinedGame', function (data) {
     var name = data.name;
 
     if (doesNameExist(name)) {
-      console.log('client player ' + name + ' have name conflict');
-
       socket.emit('serverPlayerJoinedError', { error: 'This name already exists in the game.' });
     } else {
-      console.log('client player ' + name + ' have joined the game');
-
-      playerInfo = (0, _extends3.default)({}, data, { id: playerId++ });
+      playerInfo = (0, _extends3.default)({}, data, { id: playerId++, isReady: false });
       players.push(playerInfo);
 
       socket.emit('serverPlayerJoinedSuccess', {
         playerInfo: playerInfo,
         players: players,
-        message: 'you have joined the game'
+        message: 'you joined the game'
       });
       socket.broadcast.emit('serverUpdatePlayers', {
         players: players,
-        message: 'player ' + name + ' have joined the game'
+        message: name + ' joined the game'
       });
     }
   });
 
+  socket.on('clientPlayerToggleReady', function () {
+    playerInfo.isReady = !playerInfo.isReady;
+
+    socket.broadcast.emit('serverUpdatePlayers', {
+      playerInfo: playerInfo,
+      players: players
+    });
+    socket.emit('serverUpdatePlayers', {
+      playerInfo: playerInfo,
+      players: players
+    });
+  });
+
   socket.on('disconnect', function () {
     if (playerInfo) {
-      console.log('client player ' + playerInfo.name + ' have left the game');
-
       removePlayerIndexByName(playerInfo.name);
 
       socket.broadcast.emit('serverUpdatePlayers', {
         players: players,
-        message: 'player ' + playerInfo.name + ' have left the game'
+        message: playerInfo.name + ' left the game'
       });
     }
   });
