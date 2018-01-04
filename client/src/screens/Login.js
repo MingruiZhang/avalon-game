@@ -3,8 +3,11 @@ import { connect } from 'react-redux';
 import { joinGameAction } from '../actions/preGameActions';
 import { func } from 'prop-types';
 import { fetchAvatar } from '../utils';
-import { StyleSheet, Text, View, Button } from 'react-native';
-
+import { StyleSheet, Text, View } from 'react-native';
+// import '../assets/fonts/SanFranciscoText-Regular';
+/**
+ * React Component
+ */
 class Login extends React.Component {
   static propTypes = {
     joinGame: func.isRequired
@@ -32,7 +35,7 @@ class Login extends React.Component {
     const { avatarId } = this.state;
     return (
       <View>
-        <Text> Welcome to </Text>
+        <Text style={styles.titleSub}> Welcome to </Text>
         <Text> Avalon </Text>
         <form onSubmit={this.handleSubmit} className="login-form">
           <img
@@ -54,7 +57,16 @@ class Login extends React.Component {
     );
   }
 }
-
+/**
+ * Stylesheet
+ */
+const styles = StyleSheet.create({
+  titleSub: { fontWeight: 'bold' },
+  text: { fontWeight: 'bold' }
+});
+/**
+ * Redux connect layer
+ */
 const mapDispatchToProps = dispatch => {
   return {
     joinGame: name => dispatch(joinGameAction(name))

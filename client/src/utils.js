@@ -28,3 +28,6 @@ export const fetchAvatar = avatarId =>
 /**
  * Styles
  */
+// export const fontStyle = {
+
+// }
