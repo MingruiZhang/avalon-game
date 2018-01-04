@@ -16,7 +16,7 @@ var players = [];
 
 var doesNameExist = function doesNameExist(name) {
   return players.some(function (player) {
-    player.name === name;
+    return player.name === name;
   });
 };
 
@@ -34,10 +34,16 @@ var socketManager = function socketManager(socket) {
   socket.on('clientPlayerJoinedGame', function (data) {
     var name = data.name;
 
-    if (doesNameExist(name)) {
-      socket.emit('serverPlayerJoinedError', { error: 'This name already exists in the game.' });
+    if (!name.length) {
+      socket.emit('serverPlayerJoinedError', {
+        error: 'Please enter your nickname'
+      });
+    } else if (doesNameExist(name)) {
+      socket.emit('serverPlayerJoinedError', {
+        error: 'Nickname already taken in the game'
+      });
     } else {
-      playerInfo = (0, _extends3.default)({}, data, { id: playerId++, isReady: false });
+      playerInfo = (0, _extends3.default)({}, data, { playerId: playerId++, isReady: false });
       players.push(playerInfo);
 
       socket.emit('serverPlayerJoinedSuccess', {

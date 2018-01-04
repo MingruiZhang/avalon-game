@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { joinGameAction } from '../actions/preGameActions';
 import { func } from 'prop-types';
 import { fetchAvatar } from '../utils';
-// import { imgUrl } from '../assets/avatars/avartar1.png';
+import { StyleSheet, Text, View, Button } from 'react-native';
 
 class Login extends React.Component {
   static propTypes = {
@@ -31,7 +31,9 @@ class Login extends React.Component {
   render() {
     const { avatarId } = this.state;
     return (
-      <div>
+      <View>
+        <Text> Welcome to </Text>
+        <Text> Avalon </Text>
         <form onSubmit={this.handleSubmit} className="login-form">
           <img
             src={fetchAvatar(avatarId)}
@@ -48,7 +50,7 @@ class Login extends React.Component {
           />
           <input type="submit" value="Submit" />
         </form>
-      </div>
+      </View>
     );
   }
 }
