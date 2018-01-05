@@ -31,9 +31,10 @@ body {
  * 1. Set backgound image to our assets
  */
 body {
-  background: url('./assets/background/background.jpg') no-repeat;
+  background-image: url('./assets/background/background.jpg');
   background-size: cover;
-  background-attachment: fixed;
+  background-position: center top;
+  background-repeat: no-repeat;
   display: flex;
   flex-direction: column;
 }
