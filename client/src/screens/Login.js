@@ -3,7 +3,14 @@ import { connect } from 'react-redux';
 import { joinGameAction } from '../actions/preGameActions';
 import { func } from 'prop-types';
 import { fetchAvatar } from '../utils';
-import { StyleSheet, Text, View, Image, TextInput, Button } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TextInput,
+  TouchableOpacity
+} from 'react-native';
 import * as Styles from '../styles';
 
 /**
@@ -12,41 +19,43 @@ import * as Styles from '../styles';
 const styles = StyleSheet.create({
   pageContainer: {
     flex: 1,
-    paddingTop: 80
+    paddingTop: 40,
+    backgroundImage: require('../assets/background/background.jpg')
   },
   titleSubText: {
     ...Styles.defaultTextStyles,
     fontFamily: Styles.FontFamily.SanFranciscoBold,
-    fontSize: 16
+    fontSize: 17
   },
   titleMainText: {
     color: Styles.Color.SaffronYellow,
     fontFamily: Styles.FontFamily.Homestead,
     alignSelf: 'center',
-    fontSize: 40,
-    paddingTop: 10
+    fontSize: 40
   },
   avatarContainer: {
     alignSelf: 'center',
-    paddingTop: 60
+    marginTop: 32
   },
   nickNameInput: {
     ...Styles.defaultTextStyles,
     alignSelf: 'center',
     borderBottomColor: Styles.Color.SaffronYellow,
-    borderBottomWidth: 1,
-    marginTop: 60,
-    paddingBottom: 10,
-    textAlign: 'center'
+    borderBottomWidth: 2,
+    marginTop: 40,
+    paddingBottom: 6,
+    outline: 'none'
   },
-  pageFooter: {
+  footerButton: {
     flex: 1,
     justifyContent: 'flex-end'
   },
   nextButtonText: {
+    ...Styles.defaultTextStyles,
     fontFamily: Styles.FontFamily.SanFranciscoBold,
-    fontSize: 20,
-    color: Styles.Color.DeepGray
+    backgroundColor: Styles.Color.SaffronYellow,
+    color: Styles.Color.DeepGray,
+    padding: 10
   }
 });
 
@@ -87,20 +96,17 @@ class Login extends React.Component {
         </View>
         <TextInput
           style={styles.nickNameInput}
-          autoFocus={true}
           onChangeText={text => this.setState({ name: text })}
           placeholder="Nickname"
           autoCapitalize="words"
         />
-        <View style={styles.pageFooter}>
-          <View style={styles.nextButtonContainer}>
-            <Button
-              style={styles.nextButton}
-              onPress={this.handleJoinGame}
-              color={Styles.Color.SaffronYellow}
-              title="next"
-            />
-          </View>
+        <View style={styles.footerButton}>
+          <TouchableOpacity
+            styles={styles.nextButton}
+            onPress={this.handleJoinGame}
+          >
+            <Text style={styles.nextButtonText}>NEXT</Text>
+          </TouchableOpacity>
         </View>
       </View>
     );

@@ -1,7 +1,29 @@
+@font-face {
+  font-family: 'Homestead';
+  font-style: normal;
+  font-weight: normal;
+  src: url('./assets/fonts/Homestead-Regular.ttf');
+}
+
+@font-face {
+  font-family: 'SanFrancisco Regular';
+  font-style: normal;
+  font-weight: normal;
+  src: url('./assets/fonts/SanFranciscoText-Regular.otf');
+}
+
+@font-face {
+  font-family: 'SanFrancisco Bold';
+  font-style: normal;
+  font-weight: normal;
+  src: url('./assets/fonts/SanFranciscoText-Bold.otf');
+}
+
 html,
 body {
   margin: 0;
   padding: 0;
+  height: 100%;
 }
 
 /**
@@ -9,15 +31,15 @@ body {
  * 1. Set backgound image to our assets
  */
 body {
-  background: url('./assets/background/background.jpg') no-repeat top center; /* 1 */
-  background-size: cover; /* 1 */
+  background: url('./assets/background/background.jpg') no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
   display: flex;
-  min-height: 100vh;
   flex-direction: column;
 }
 
 #root {
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
+  height: 100%;
 }

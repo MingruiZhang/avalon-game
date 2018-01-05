@@ -9,9 +9,9 @@ export const Color = {
 };
 
 export const FontFamily = {
-  SanFranciscoRegular: 'SanFranciscoText-Regular',
-  SanFranciscoBold: 'SanFranciscoText-Bold',
-  Homestead: 'Homestead-Regular'
+  SanFranciscoRegular: 'SanFrancisco Regular',
+  SanFranciscoBold: 'SanFrancisco Bold',
+  Homestead: 'Homestead'
 };
 
 export const defaultTextStyles = {
