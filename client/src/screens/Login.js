@@ -3,15 +3,11 @@ import { connect } from 'react-redux';
 import { joinGameAction } from '../actions/preGameActions';
 import { func } from 'prop-types';
 import { fetchAvatar } from '../utils';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TextInput,
-  TouchableOpacity
-} from 'react-native';
+import { StyleSheet, Text, View, Image, TextInput } from 'react-native';
 import * as Styles from '../styles';
+
+import FooterButton from '../components/FooterButton';
+import Footer from '../components/Footer';
 
 /**
  * Stylesheet
@@ -19,8 +15,7 @@ import * as Styles from '../styles';
 const styles = StyleSheet.create({
   pageContainer: {
     flex: 1,
-    paddingTop: 40,
-    backgroundImage: require('../assets/background/background.jpg')
+    paddingTop: 40
   },
   titleSubText: {
     ...Styles.defaultTextStyles,
@@ -100,14 +95,9 @@ class Login extends React.Component {
           placeholder="Nickname"
           autoCapitalize="words"
         />
-        <View style={styles.footerButton}>
-          <TouchableOpacity
-            styles={styles.nextButton}
-            onPress={this.handleJoinGame}
-          >
-            <Text style={styles.nextButtonText}>NEXT</Text>
-          </TouchableOpacity>
-        </View>
+        <Footer>
+          <FooterButton onClick={this.handleJoinGame} buttonText="NEXT" />
+        </Footer>
       </View>
     );
   }

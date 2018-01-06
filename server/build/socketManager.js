@@ -8,6 +8,8 @@ var _extends2 = require('babel-runtime/helpers/extends');
 
 var _extends3 = _interopRequireDefault(_extends2);
 
+var _utils = require('./utils');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // This is global scope
@@ -27,6 +29,17 @@ var removePlayerIndexByName = function removePlayerIndexByName(name) {
   players.splice(index, 1);
 };
 
+var allPlayersReady = function allPlayersReady() {
+  return players.every(function (player) {
+    return player.isReady;
+  });
+};
+
+var socketEmitAll = function socketEmitAll(socket, eventName, data) {
+  socket.broadcast.emit(eventName, data);
+  socket.emit(eventName, data);
+};
+
 var socketManager = function socketManager(socket) {
   // This will be scoped to each individual socket(user)
   var playerInfo = undefined;
@@ -35,40 +48,88 @@ var socketManager = function socketManager(socket) {
     var name = data.name;
 
     if (!name.length) {
+      /**
+       * Join error: Name can't be empty
+       */
       socket.emit('serverPlayerJoinedError', {
         error: 'Please enter your nickname'
       });
     } else if (doesNameExist(name)) {
+      /**
+       * Join error: Name conflict with exist player
+       */
       socket.emit('serverPlayerJoinedError', {
         error: 'Nickname already taken in the game'
       });
+    } else if (players.length >= 10) {
+      /**
+       * Join error: Already 10 players in game
+       */
+      socket.emit('serverPlayerJoinedError', {
+        error: 'Too many players in game'
+      });
     } else {
-      playerInfo = (0, _extends3.default)({}, data, { playerId: playerId++, isReady: false });
+      /**
+       * Join success: Create new player info
+       */
+      playerInfo = (0, _extends3.default)({}, data, {
+        key: playerId++,
+        isReady: false,
+        isAdmin: name === 'Ming' || name === 'Naixin'
+      });
       players.push(playerInfo);
-
+      /**
+       * Emit sockets
+       */
       socket.emit('serverPlayerJoinedSuccess', {
         playerInfo: playerInfo,
         players: players,
-        message: 'you joined the game'
+        log: {
+          message: 'you joined the game',
+          type: 'normal'
+        }
       });
       socket.broadcast.emit('serverUpdatePlayers', {
         players: players,
-        message: name + ' joined the game'
+        log: {
+          message: name + ' joined the game',
+          type: 'normal'
+        }
       });
     }
   });
 
   socket.on('clientPlayerToggleReady', function () {
+    /**
+     * Toggle ready state
+     */
     playerInfo.isReady = !playerInfo.isReady;
-
-    socket.broadcast.emit('serverUpdatePlayers', {
-      playerInfo: playerInfo,
-      players: players
-    });
-    socket.emit('serverUpdatePlayers', {
-      playerInfo: playerInfo,
-      players: players
-    });
+    /**
+     * If all players are ready, check if game can start
+     */
+    if (playerInfo.isReady && allPlayersReady()) {
+      if (players.length < 6) {
+        socketEmitAll(socket, 'serverUpdatePlayers', {
+          playerInfo: playerInfo,
+          players: players,
+          log: {
+            message: '6+ players needed to start agame',
+            type: 'error'
+          }
+        });
+      } else {
+        socketEmitAll(socket, 'serverUpdatePlayers', {
+          playerInfo: playerInfo,
+          players: players,
+          log: {
+            message: 'Starting game in 5',
+            type: 'important'
+          }
+        });
+      }
+    } else {
+      socketEmitAll(socket, 'serverUpdatePlayers', { playerInfo: playerInfo, players: players });
+    }
   });
 
   socket.on('disconnect', function () {
@@ -77,9 +138,33 @@ var socketManager = function socketManager(socket) {
 
       socket.broadcast.emit('serverUpdatePlayers', {
         players: players,
-        message: playerInfo.name + ' left the game'
+        log: {
+          message: playerInfo.name + ' left the game',
+          type: 'normal'
+        }
       });
     }
+  });
+
+  /**
+   * ADMIN FEATURES:
+   */
+  socket.on('clientAddDummyPlayers', function () {
+    var randomName = (0, _utils.getRandomDummyName)() + ('-' + playerId++);
+    var dummyPlayer = {
+      name: randomName,
+      avatarId: (0, _utils.getRandomAvatarId)(),
+      isReady: true,
+      isDummy: true
+    };
+    players.push(dummyPlayer);
+    socketEmitAll(socket, 'serverUpdatePlayers', {
+      players: players,
+      log: {
+        message: randomName + ' joined the game',
+        type: 'normal'
+      }
+    });
   });
 };
 

@@ -5,13 +5,69 @@ import {
   onPlayersUpdateAction,
   toggledReadyStateAction
 } from '../actions/preGameActions';
-import Player from '../components/Player';
+import { StyleSheet, Text, View } from 'react-native';
+import * as Styles from '../styles';
 
+import Player from '../components/Player';
+import FooterButton from '../components/FooterButton';
+import Footer from '../components/Footer';
+import AdminPanelPreGame from '../components/AdminPanelPreGame';
+
+/**
+ * Stylesheet
+ */
+const styles = StyleSheet.create({
+  pageContainer: {
+    flex: 1,
+    paddingTop: 30
+  },
+  titleText: {
+    ...Styles.defaultTextStyles,
+    fontFamily: Styles.FontFamily.SanFranciscoBold
+  },
+  playerList: {
+    paddingLeft: 30,
+    paddingRight: 30,
+    flexDirection: 'row',
+    flexWrap: 'wrap'
+  },
+  playerItem: {
+    width: '33%'
+  },
+  logItem: {
+    ...Styles.defaultTextStyles,
+    fontSize: 14,
+    paddingBottom: 10
+  },
+  errorLog: {
+    color: Styles.Color.WarningRed
+  },
+  importantLog: {
+    color: Styles.Color.SaffronYellow,
+    fontFamily: Styles.FontFamily.SanFranciscoBold
+  },
+  fadeLevel3: {
+    opacity: 0.3
+  },
+  fadeLevel2: {
+    opacity: 0.5
+  },
+  fadeLevel1: {
+    opacity: 0.8
+  },
+  fadeLevel0: {
+    opacity: 1
+  }
+});
+
+/**
+ * React Component
+ */
 class Prepare extends Component {
   static propTypes = {
     myPlayer: object.isRequired,
     players: array.isRequired,
-    messages: array.isRequired,
+    logs: array.isRequired,
     playersUpdateListener: func.isRequired,
     toggleReadyState: func.isRequired
   };
@@ -25,56 +81,72 @@ class Prepare extends Component {
   renderPlayers = () => {
     const { myPlayer, players } = this.props;
     return (
-      <div>
-        <h3>Players:</h3>
-        <div>
-          {players.map(player => {
-            return (
-              <Player
-                key={`player-${player.playerId}`}
-                player={player}
-                isMe={player.playerId === myPlayer.playerId}
-              />
-            );
-          })}
-        </div>
-      </div>
+      <View style={styles.playerList}>
+        {players.map(player => {
+          return (
+            <View style={styles.playerItem} key={player.key}>
+              <Player player={player} isMe={player.key === myPlayer.key} />
+            </View>
+          );
+        })}
+      </View>
     );
   };
 
   renderLogs = () => {
-    const { messages } = this.props;
+    const { logs } = this.props;
     return (
-      <div>
-        <h3>Logs:</h3>
-        <ul>
-          {messages.map((message, index) => {
-            return <li key={index}>{message}</li>;
-          })}
-        </ul>
-      </div>
+      <View style={styles.logContainer}>
+        {logs.map((log, index) => {
+          const backwardIndex = logs.length - 1 - index;
+          // log styles (opacity + color)
+          const logStyle = [
+            styles.logItem,
+            styles[`fadeLevel${backwardIndex}`]
+          ];
+          if (log.type === 'error') {
+            logStyle.push(styles.errorLog);
+          } else if (log.type === 'important') {
+            logStyle.push(styles.importantLog);
+          }
+          return (
+            <Text style={logStyle} key={index}>
+              {log.message}
+            </Text>
+          );
+        })}
+      </View>
     );
   };
 
   render() {
     const { myPlayer, toggleReadyState } = this.props;
     return (
-      <div>
+      <View style={styles.pageContainer}>
+        {myPlayer.isAdmin ? <AdminPanelPreGame /> : null}
+        <Text style={styles.titleText}>New Game</Text>
         {this.renderPlayers()}
-        <button onClick={toggleReadyState}>
-          {myPlayer.isReady ? "I'm not ready" : "I'm ready"}
-        </button>
-        {this.renderLogs()}
-      </div>
+        <Footer>
+          {this.renderLogs()}
+          <FooterButton
+            onClick={toggleReadyState}
+            buttonText={myPlayer.isReady ? 'CANCEL READY' : 'READY'}
+            darkMode={myPlayer.isReady ? true : false}
+          />
+        </Footer>
+      </View>
     );
   }
 }
 
+/**
+ * Redux connect layer
+ */
 const mapStateToProps = state => {
   return {
     myPlayer: state.preGame.myPlayer,
     players: state.preGame.players,
-    messages: state.preGame.messages
+    logs: state.preGame.logs
   };
 };
 
