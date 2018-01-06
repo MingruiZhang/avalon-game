@@ -54,7 +54,7 @@ const socketManager = socket => {
         key: playerId++,
         isReady: false,
         isDummy: false,
-        isAdmin: name === 'Admin-Ming' || name === 'Admin-Naixin'
+        isAdmin: name === 'Admin' || 'Admin-Ming' || name === 'Admin-Naixin'
       };
       players.push(playerInfo);
       /**
