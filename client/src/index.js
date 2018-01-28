@@ -10,7 +10,7 @@ import reducer from './reducers';
 import './index.css';
 import { isDevEnv } from './utils';
 
-const middleware = [thunk, isDevEnv && logger];
+const middleware = [thunk, isDevEnv && logger].filter(Boolean);
 
 const store = createStore(reducer, applyMiddleware(...middleware));
 
