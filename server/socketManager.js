@@ -45,6 +45,8 @@ export default socket => {
       socket.emit('serverPlayerJoinedError', { error: 'Nickname already taken in the game' });
     } else if (PlayerStore.allPlayers().length >= 10) {
       socket.emit('serverPlayerJoinedError', { error: 'Too many players in game' });
+    } else if (GameStore.isGameStarted()) {
+      socket.emit('serverPlayerJoinedError', { error: 'A game have already started' });
     } else {
       GameStore.gamePrepare();
       // Create new playerInfo
