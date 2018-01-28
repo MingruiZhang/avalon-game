@@ -28,7 +28,7 @@ class Main extends Component {
 const mapStateToProps = state => {
   return {
     joinedGame: state.preGame.joinedGame,
-    gameStarted: state.game.gameStarted
+    gameStarted: state.preGame.gameStarted
   };
 };
 

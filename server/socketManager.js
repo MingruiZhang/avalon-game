@@ -4,7 +4,7 @@ import * as GameStore from './data/game';
 
 export const startGameCountDown = socket => {
   GameStore.gameStarting();
-  let countDown = 1;
+  let countDown = 5;
 
   const gameStartCountDown = setInterval(() => {
     // If someone cancel ready, stop game starting
@@ -18,11 +18,13 @@ export const startGameCountDown = socket => {
       // If count downa is 0, game started.
       if (countDown === 0) {
         GameStore.gameStarted();
-        PlayerStore.assignRoles();
-        socketEmitAll(socket, 'serverGameStart', {
-          players: PlayerStore.allPlayers(),
-          gameSetup: GameStore.gameSetupByPlayers[PlayerStore.allPlayers().length]
+        PlayerStore.assignRoles(() => {
+          socketEmitAll(socket, 'serverGameStart', {
+            players: PlayerStore.allPlayers(),
+            gameSetup: GameStore.gameSetupByPlayers[PlayerStore.allPlayers().length]
+          });
         });
+        clearInterval(gameStartCountDown);
       } else {
         socketEmitAll(socket, 'serverUpdatePlayers', {
           players: PlayerStore.allPlayers(),

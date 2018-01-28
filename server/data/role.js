@@ -8,31 +8,83 @@ export const SPECIALITY = Object.freeze({
 });
 
 class roleClass {
-  constructor({ name, isBad, specialities }) {
+  constructor({ name, isEvil, specialities, description }) {
     this.name = name;
-    this.isBad = isBad;
+    this.isEvil = isEvil;
     this.specialities = specialities;
+    this.description = description;
   }
 }
 
 // Bad side
-const ASSASSIN = new roleClass({ name: 'Assassin', isBad: true, specialities: [SPECIALITY.KILL_MERLIN] });
-const MORGANA = new roleClass({ name: 'Morgana', isBad: true, specialities: [SPECIALITY.HAS_MAGIC] });
-const MORDRED = new roleClass({ name: 'Mordred', isBad: true, specialities: [SPECIALITY.IS_HIDDEN] });
-const OBERON = new roleClass({ name: 'Oberon', isBad: true, specialities: [SPECIALITY.BRAINLESS] });
-const BAD_1 = new roleClass({ name: 'Servant of Mordred', isBad: true, specialities: [] });
+const ASSASSIN = new roleClass({
+  name: 'Assassin',
+  isEvil: true,
+  specialities: [SPECIALITY.KILL_MERLIN],
+  description: 'You can kill Merlin'
+});
+const MORGANA = new roleClass({
+  name: 'Morgana',
+  isEvil: true,
+  specialities: [SPECIALITY.HAS_MAGIC],
+  description: 'You appears as Merlin'
+});
+const MORDRED = new roleClass({
+  name: 'Mordred',
+  isEvil: true,
+  specialities: [SPECIALITY.IS_HIDDEN],
+  description: 'You are unknown to Merlin'
+});
+const OBERON = new roleClass({
+  name: 'Oberon',
+  isEvil: true,
+  specialities: [SPECIALITY.BRAINLESS],
+  description: 'You are unknown to evil'
+});
+const BAD_1 = new roleClass({
+  name: 'Minion of Mordred',
+  isEvil: true,
+  specialities: [],
+  description: 'You are plain evil'
+});
 
 // Good side
 const MERLIN = new roleClass({
   name: 'Merlin',
-  isBad: false,
-  specialities: [SPECIALITY.IS_MERLIN, SPECIALITY.HAS_MAGIC]
+  isEvil: false,
+  specialities: [SPECIALITY.IS_MERLIN, SPECIALITY.HAS_MAGIC],
+  description: 'You know evil'
 });
-const PERCIVAL = new roleClass({ name: 'Percival', isBad: false, specialities: [SPECIALITY.DETECT_MAGIC] });
-const GOOD_1 = new roleClass({ name: 'Servant of Arthur', isBad: false, specialities: [] });
-const GOOD_2 = new roleClass({ name: 'Servant of Arthur', isBad: false, specialities: [] });
-const GOOD_3 = new roleClass({ name: 'Servant of Arthur', isBad: false, specialities: [] });
-const GOOD_4 = new roleClass({ name: 'Servant of Arthur', isBad: false, specialities: [] });
+const PERCIVAL = new roleClass({
+  name: 'Percival',
+  isEvil: false,
+  specialities: [SPECIALITY.DETECT_MAGIC],
+  description: 'You can detect people with magic'
+});
+const GOOD_1 = new roleClass({
+  name: 'Servant of Arthur',
+  isEvil: false,
+  specialities: [],
+  description: 'You know nothing :)'
+});
+const GOOD_2 = new roleClass({
+  name: 'Servant of Arthur',
+  isEvil: false,
+  specialities: [],
+  description: 'You know nothing :)'
+});
+const GOOD_3 = new roleClass({
+  name: 'Servant of Arthur',
+  isEvil: false,
+  specialities: [],
+  description: 'You know nothing :)'
+});
+const GOOD_4 = new roleClass({
+  name: 'Servant of Arthur',
+  isEvil: false,
+  specialities: [],
+  description: 'You know nothing :)'
+});
 
 export const GameRoleSetByPlayers = {
   // 4 Good + 2 Bad

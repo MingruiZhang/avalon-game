@@ -1,11 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { array, func, string, object } from 'prop-types';
-import { createEmitSocket, fetchAvatar } from '../utils';
+import { createEmitSocket, deduplicateJoinArray, fetchAvatar } from '../utils';
 import { StyleSheet, Text, View, Image, TextInput } from 'react-native';
 import * as Styles from '../styles';
 import FooterButton from '../components/FooterButton';
 import { onGameUpdateAction } from '../actions/gameActions';
+import Modal from 'react-responsive-modal';
+import Player from '../components/Player';
+
+import '../css/modal.css';
 
 /**
  * Stylesheet
@@ -66,6 +70,33 @@ const styles = StyleSheet.create({
   },
   currentStateContainer: {
     paddingHorizontal: 20
+  },
+  modalSection: {
+    marginHorizontal: 16,
+    marginVertical: 24
+  },
+  modalAboutYouText: {
+    color: Styles.Color.White,
+    fontFamily: Styles.FontFamily.SanFranciscoBold,
+    fontSize: 20
+  },
+  colorYellow: {
+    color: Styles.Color.SaffronYellow
+  },
+  colorLightGray: {
+    color: Styles.Color.LightGray
+  },
+  modalOverviewText: {
+    color: Styles.Color.White,
+    fontFamily: Styles.FontFamily.SanFranciscoRegular,
+    fontSize: 17
+  },
+  withIcon: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  marginBottom10: {
+    marginBottom: 10
   }
 });
 
@@ -85,8 +116,16 @@ class Game extends React.Component {
     const { gameUpdateListener, players, myKey } = props;
     gameUpdateListener();
     const myPlayer = players.find(player => player.key === myKey);
-    this.state = { myPlayer };
+    this.state = { myPlayer, open: true };
   }
+
+  onOpenModal = () => {
+    this.setState({ open: true });
+  };
+
+  onCloseModal = () => {
+    this.setState({ open: false });
+  };
 
   render() {
     return (
@@ -94,6 +133,7 @@ class Game extends React.Component {
         {this._renderHeader()}
         {this._renderProgress()}
         {this._renderCurrentStatus()}
+        {this._renderInfoModal()}
       </View>
     );
   }
@@ -116,6 +156,7 @@ class Game extends React.Component {
         <View style={styles.headerSubContainer}>
           <Image
             style={styles.headerInfo}
+            onClick={this.onOpenModal}
             source={{
               uri: require('../assets/icons/info.png'),
               height: 22,
@@ -151,6 +192,64 @@ class Game extends React.Component {
       <View style={styles.currentStateContainer}>
         <Text style={styles.sectionHeader}>STATUS</Text>
       </View>
+    );
+  }
+
+  _renderInfoModal() {
+    const { myPlayer, open } = this.state;
+    const { players } = this.props;
+    const overviewInfo = myPlayer.info.overviewInfo;
+    const myInfo = myPlayer.info.yourInfo;
+    const goodIcon = require('../assets/icons/good.png');
+    const badIcon = require('../assets/icons/evil.png');
+    const myIcon = myInfo.roleIsEvil ? badIcon : goodIcon;
+    return (
+      <Modal
+        classNames={{ modal: 'modalContainer', closeIcon: 'closeIcon' }}
+        open={open}
+        onClose={this.onCloseModal}
+        little
+      >
+        {/* About you: What role you are, who do you know*/}
+        <Text style={styles.sectionHeader}>ABOUT YOU</Text>
+        <View style={styles.modalSection}>
+          <View style={styles.withIcon}>
+            <Text style={styles.modalAboutYouText}>
+              <Text>You are </Text>
+              <Text style={styles.colorYellow}>{myInfo.roleName}</Text>
+            </Text>
+            <Image source={{ uri: myIcon, height: 48, width: 48 }} />
+          </View>
+          <Text style={[styles.modalAboutYouText, styles.marginBottom10]}>{myInfo.knowMessage}</Text>
+          {myInfo.knowPlayers ? (
+            <View>
+              {myInfo.knowPlayers.map(playerKey => {
+                const playerInfo = players.find(player => player.key === playerKey);
+                return <Player player={playerInfo} key={playerInfo.key} withReady={false} listView={true} />;
+              })}
+            </View>
+          ) : null}
+        </View>
+        {/* Overview: What roles are in this game*/}
+        <Text style={styles.sectionHeader}>OVERVIEW</Text>
+        <View style={styles.modalSection}>
+          <Text style={[styles.modalOverviewText, styles.marginBottom10]}>Total Players: {players.length}</Text>
+          <View style={styles.withIcon}>
+            <Image source={{ uri: goodIcon, height: 36, width: 36 }} />
+            <Text style={styles.modalOverviewText}>Good Roles</Text>
+          </View>
+          <Text style={[styles.modalOverviewText, styles.colorLightGray, styles.marginBottom10]}>
+            {deduplicateJoinArray(overviewInfo.goodList)}
+          </Text>
+          <View style={styles.withIcon}>
+            <Image source={{ uri: badIcon, height: 36, width: 36 }} />
+            <Text style={styles.modalOverviewText}>Evil Roles</Text>
+          </View>
+          <Text style={[styles.modalOverviewText, styles.colorLightGray]}>
+            {deduplicateJoinArray(overviewInfo.evilList)}
+          </Text>
+        </View>
+      </Modal>
     );
   }
 }

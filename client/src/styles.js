@@ -4,6 +4,7 @@
 export const Color = {
   SaffronYellow: '#efc52b',
   DeepGray: '#4a4a4a',
+  LightGray: '#9b9b9b',
   White: '#ffffff',
   WarningRed: '#fe4d7a'
 };

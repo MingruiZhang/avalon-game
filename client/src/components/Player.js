@@ -13,8 +13,18 @@ const styles = StyleSheet.create({
     fontSize: 17,
     paddingTop: 10
   },
+  listNameText: {
+    flexDirection: 'row',
+    paddingLeft: 10,
+    paddingTop: 'auto'
+  },
   componentContainer: {
     paddingTop: 30
+  },
+  listContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingTop: 10
   },
   avatarContainer: {
     alignSelf: 'center'
@@ -51,25 +61,34 @@ const styles = StyleSheet.create({
  */
 export default class Player extends React.Component {
   static propTypes = {
-    isMe: bool.isRequired,
+    isMe: bool,
+    withReady: bool,
+    listView: bool,
     player: object.isRequired
   };
 
+  static defaultProps = {
+    isMe: false,
+    listView: false,
+    withReady: true
+  };
+
   render() {
-    const { isMe, player } = this.props;
+    const { isMe, player, withReady, listView } = this.props;
+    const avatarSize = listView ? 32 : 50;
     return (
-      <View style={styles.componentContainer}>
+      <View style={[styles.componentContainer, listView && styles.listContainer]}>
         <View style={[styles.avatarContainer, isMe && styles.isMeBorder]}>
           <Image
             source={{
               uri: fetchAvatar(player.avatarId),
-              height: 50,
-              width: 50
+              height: avatarSize,
+              width: avatarSize
             }}
           />
         </View>
-        {player.isReady ? <Text style={styles.isReadyLabel}>Ready</Text> : null}
-        <Text numberOfLines={1} style={[styles.nameText, isMe && styles.isMeText]}>
+        {player.isReady && withReady ? <Text style={styles.isReadyLabel}>Ready</Text> : null}
+        <Text numberOfLines={1} style={[styles.nameText, isMe && styles.isMeText, listView && styles.listNameText]}>
           {player.name}
         </Text>
       </View>

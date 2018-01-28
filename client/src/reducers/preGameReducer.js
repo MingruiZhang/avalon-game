@@ -5,7 +5,8 @@ const DEFAULT_STATE = {
   joinedGame: false,
   error: undefined,
   myKey: undefined,
-  logs: []
+  logs: [],
+  gameStarted: false
 };
 
 const modifyLogList = (oldLogs, newLog) => {
@@ -37,7 +38,8 @@ const preGameReducer = (state = DEFAULT_STATE, action) => {
     case 'GAME_STARTED':
       return {
         ...state,
-        players: action.payload.players
+        players: action.payload.players,
+        gameStarted: true
       };
     default:
       return state;

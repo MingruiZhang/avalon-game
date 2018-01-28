@@ -22,42 +22,48 @@ export const addPlayer = data => {
   PLAYERS.push(newPlayer);
   return newPlayer;
 };
-export const assignRoles = () => {
+export const assignRoles = cb => {
   const shuffledRoles = shuffleArray(GameRoleSetByPlayers[PLAYERS.length]);
+  const overviewInfo = {
+    goodList: GameRoleSetByPlayers[PLAYERS.length].filter(role => !role.isEvil).map(role => role.name),
+    evilList: GameRoleSetByPlayers[PLAYERS.length].filter(role => role.isEvil).map(role => role.name)
+  };
   // Assign shuffled roles to each player
   PLAYERS.forEach((player, index) => {
     player.role = shuffledRoles[index];
   });
   // Additional information
-  const badPlayers = PLAYERS.filter(player => player.role.isBad);
-  const merlinKnow = badPlayers.filter(player => !player.role.specialities.includes(SPECIALITY.IS_HIDDEN));
-  const badKnow = badPlayers.filter(player => !player.role.specialities.includes(SPECIALITY.BRAINLESS));
+  const evilPlayers = PLAYERS.filter(player => player.role.isEvil);
+  const merlinKnow = evilPlayers.filter(player => !player.role.specialities.includes(SPECIALITY.IS_HIDDEN));
+  const evilKnow = evilPlayers.filter(player => !player.role.specialities.includes(SPECIALITY.BRAINLESS));
   const percivalKnow = PLAYERS.filter(player => player.role.specialities.includes(SPECIALITY.HAS_MAGIC));
   // Give additional information to each player
   PLAYERS.forEach(you => {
-    const yourMessage = [];
-    // If you are bad, you know your teammates (apart from Oberon)
-    if (you.role.isBad) {
-      const youKnow = badKnow
-        .filter(bad => bad.name !== you.name) // filter yourself
-        .map(bad => bad.name)
-        .join();
-      yourMessage.push(`your teammates are ${youKnow}`);
-    }
-    // If you are Merlin, you know bad players (apart from Mordred)
-    if (you.role.specialities.includes(SPECIALITY.IS_MERLIN)) {
-      const youKnow = merlinKnow.map(bad => bad.name).join();
-      yourMessage.push(`bads are ${youKnow}`);
-    }
-    // If you are Percival, you know who has magic (Merlin and Morgana)
-    if (you.role.specialities.includes(SPECIALITY.DETECT_MAGIC)) {
-      const youKnow = percivalKnow.map(magic => magic.name).join();
-      yourMessage.push(`magic people ${youKnow}`);
+    const yourInfo = {
+      roleIsEvil: you.role.isEvil,
+      roleName: you.role.name
+    };
+
+    if (evilKnow.includes(you)) {
+      // If you are evil, you know your teammates (apart from Oberon)
+      yourInfo.knowMessage = you.role.description + ', your teammates are';
+      yourInfo.knowPlayers = evilKnow.filter(player => player.key !== you.key).map(player => player.key); // filter yourself
+    } else if (you.role.specialities.includes(SPECIALITY.IS_MERLIN)) {
+      // If you are Merlin, you know evil players (apart from Mordred)
+      yourInfo.knowMessage = you.role.description + ', they are';
+      yourInfo.knowPlayers = merlinKnow.map(player => player.key);
+    } else if (you.role.specialities.includes(SPECIALITY.DETECT_MAGIC)) {
+      // If you are Merlin, you know evil players (apart from Mordred)
+      yourInfo.knowMessage = you.role.description + ', they are';
+      yourInfo.knowPlayers = percivalKnow.map(player => player.key);
+    } else {
+      yourInfo.knowMessage = you.role.description;
     }
 
-    you.role.message = yourMessage;
-    console.log(`${you.name}: ${you.role.name}: ${you.role.isBad}: ${yourMessage.join()} `);
+    you.info = { yourInfo, overviewInfo };
   });
+
+  cb();
 };
 
 /**
