@@ -8,8 +8,11 @@ import thunk from 'redux-thunk';
 import Main from './screens';
 import reducer from './reducers';
 import './index.css';
+import { isDevEnv } from './utils';
 
-const store = createStore(reducer, applyMiddleware(thunk, logger));
+const middleware = [thunk, isDevEnv && logger];
+
+const store = createStore(reducer, applyMiddleware(...middleware));
 
 ReactDOM.render(
   <Provider store={store}>

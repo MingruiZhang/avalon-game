@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
   mainContent: {
     flex: 1,
     paddingTop: 100,
-    paddingBottom: 60,
+    paddingBottom: 40,
     overflowX: 'scroll'
   },
   titleSubText: {
