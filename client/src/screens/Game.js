@@ -5,7 +5,7 @@ import { createEmitSocket, deduplicateJoinArray, fetchAvatar } from '../utils';
 import { StyleSheet, Text, View, Image, TextInput } from 'react-native';
 import * as Styles from '../styles';
 import FooterButton from '../components/FooterButton';
-import { onGameUpdateAction } from '../actions/gameActions';
+import { onGameUpdateAction, onGameEndAction } from '../actions/gameActions';
 import Modal from 'react-responsive-modal';
 import Player from '../components/Player';
 
@@ -108,13 +108,15 @@ class Game extends React.Component {
     myKey: string.isRequired,
     players: array.isRequired,
     gameSetup: object.isRequired,
-    gameUpdateListener: func.isRequired
+    gameUpdateListener: func.isRequired,
+    gameEndListener: func.isRequired
   };
 
   constructor(props) {
     super(props);
-    const { gameUpdateListener, players, myKey } = props;
+    const { gameUpdateListener, gameEndListener, players, myKey } = props;
     gameUpdateListener();
+    gameEndListener();
     const myPlayer = players.find(player => player.key === myKey);
     this.state = { myPlayer, open: true };
   }
@@ -268,7 +270,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    gameUpdateListener: () => dispatch(onGameUpdateAction())
+    gameUpdateListener: () => dispatch(onGameUpdateAction()),
+    gameEndListener: () => dispatch(onGameEndAction())
   };
 };
 

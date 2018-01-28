@@ -7,3 +7,11 @@ export const onGameUpdateAction = () => {
     });
   };
 };
+
+export const onGameEndAction = () => {
+  return dispatch => {
+    createOnSocketCallBack('serverGameEnd', payload => {
+      dispatch({ type: 'GAME_ENDED', payload });
+    });
+  };
+};

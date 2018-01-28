@@ -115,6 +115,13 @@ export default socket => {
         log: { message: `${playerInfo.name} left the game`, type: 'normal' }
       });
     }
+
+    if (PlayerStore.allPlayers().length < 4 || playerInfo.isAdmin) {
+      GameStore.gamePrepare();
+      socketEmitAll(socket, 'serverGameEnd', {
+        players: []
+      });
+    }
   });
 
   /**

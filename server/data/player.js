@@ -11,7 +11,7 @@ class PlayerClass {
     this.name = name;
     this.isReady = !!isReady;
     this.isDummy = !!isDummy;
-    this.isAdmin = name === 'Admin' || name === 'Admin-Ming' || name === 'Admin-Naixin';
+    this.isAdmin = name === 'Admin' || name === '张明睿';
     this.key = `player-${incPlayerId++}`;
   }
 }

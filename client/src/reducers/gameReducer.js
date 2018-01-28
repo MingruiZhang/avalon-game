@@ -2,7 +2,8 @@ import { FAKE_GAME_STATE } from '../fake';
 
 const DEFAULT_STATE = {
   gameState: [],
-  gameSetup: {}
+  gameSetup: {},
+  gameStarted: false
 };
 
 const gameReducer = (state = DEFAULT_STATE, action) => {
@@ -10,7 +11,13 @@ const gameReducer = (state = DEFAULT_STATE, action) => {
     case 'GAME_STARTED':
       return {
         ...state,
-        gameSetup: action.payload.gameSetup
+        gameSetup: action.payload.gameSetup,
+        gameStarted: true
+      };
+    case 'GAME_ENDED':
+      return {
+        ...state,
+        gameStarted: false
       };
     default:
       return state;
