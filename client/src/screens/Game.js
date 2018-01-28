@@ -9,7 +9,7 @@ import { onGameUpdateAction } from '../actions/gameActions';
 import Modal from 'react-responsive-modal';
 import Player from '../components/Player';
 
-import '../css/modal.css';
+import '/modal.css';
 
 /**
  * Stylesheet

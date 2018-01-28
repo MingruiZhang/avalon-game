@@ -1,0 +1,8 @@
+.modalContainer {
+  border-radius: 8px;
+  background: linear-gradient(to bottom right, #424242, #141414) !important;
+}
+
+.closeIcon {
+  fill: white !important;
+}
