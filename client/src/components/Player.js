@@ -57,12 +57,9 @@ export default class Player extends React.Component {
 
   render() {
     const { isMe, player } = this.props;
-    const avatarStyles = isMe
-      ? [styles.avatarContainer, styles.isMeBorder]
-      : styles.avatarContainer;
     return (
       <View style={styles.componentContainer}>
-        <View style={avatarStyles}>
+        <View style={[styles.avatarContainer, isMe && styles.isMeBorder]}>
           <Image
             source={{
               uri: fetchAvatar(player.avatarId),
@@ -72,10 +69,7 @@ export default class Player extends React.Component {
           />
         </View>
         {player.isReady ? <Text style={styles.isReadyLabel}>Ready</Text> : null}
-        <Text
-          numberOfLines={1}
-          style={isMe ? [styles.nameText, styles.isMeText] : styles.nameText}
-        >
+        <Text numberOfLines={1} style={[styles.nameText, isMe && styles.isMeText]}>
           {player.name}
         </Text>
       </View>

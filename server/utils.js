@@ -1,9 +1,14 @@
-// Export a random dummy name
-export const getRandomDummyName = () => {
-  const dummyNames = ['Percival', 'H', '☺', '梅林', '莫德雷德'];
-  return dummyNames[Math.floor(Math.random() * dummyNames.length)];
+export const socketEmitAll = (socket, eventName, data) => {
+  socket.broadcast.emit(eventName, data);
+  socket.emit(eventName, data);
 };
 
-export const getRandomAvatarId = () => {
-  return Math.floor(Math.random() * 12) + 1;
+export const shuffleArray = array => {
+  // Let keep a copy so we don't change the original array
+  const newArray = [...array];
+  for (let i = newArray.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1));
+    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+  }
+  return newArray;
 };

@@ -1,23 +1,23 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { object, array, func } from 'prop-types';
-import {
-  onPlayersUpdateAction,
-  toggledReadyStateAction
-} from '../actions/preGameActions';
+import { array, func, string } from 'prop-types';
+import { onPlayersUpdateAction, onGameStartAction } from '../actions/preGameActions';
 import { StyleSheet, Text, View } from 'react-native';
 import * as Styles from '../styles';
 
 import Player from '../components/Player';
 import FooterButton from '../components/FooterButton';
-import Footer from '../components/Footer';
 import AdminPanelPreGame from '../components/AdminPanelPreGame';
+import { createEmitSocket } from '../utils';
 
 /**
  * Stylesheet
  */
 const styles = StyleSheet.create({
   pageContainer: {
+    flex: 1
+  },
+  mainContent: {
     flex: 1,
     paddingTop: 30
   },
@@ -65,27 +65,28 @@ const styles = StyleSheet.create({
  */
 class Prepare extends Component {
   static propTypes = {
-    myPlayer: object.isRequired,
+    myKey: string.isRequired,
     players: array.isRequired,
     logs: array.isRequired,
     playersUpdateListener: func.isRequired,
-    toggleReadyState: func.isRequired
+    gameStartListener: func.isRequired
   };
 
   constructor(props) {
     super(props);
-    const { playersUpdateListener } = props;
+    const { playersUpdateListener, gameStartListener } = props;
     playersUpdateListener();
+    gameStartListener();
   }
 
   renderPlayers = () => {
-    const { myPlayer, players } = this.props;
+    const { myKey, players } = this.props;
     return (
       <View style={styles.playerList}>
         {players.map(player => {
           return (
             <View style={styles.playerItem} key={player.key}>
-              <Player player={player} isMe={player.key === myPlayer.key} />
+              <Player player={player} isMe={player.key === myKey} />
             </View>
           );
         })}
@@ -100,10 +101,7 @@ class Prepare extends Component {
         {logs.map((log, index) => {
           const backwardIndex = logs.length - 1 - index;
           // log styles (opacity + color)
-          const logStyle = [
-            styles.logItem,
-            styles[`fadeLevel${backwardIndex}`]
-          ];
+          const logStyle = [styles.logItem, styles[`fadeLevel${backwardIndex}`]];
           if (log.type === 'error') {
             logStyle.push(styles.errorLog);
           } else if (log.type === 'important') {
@@ -120,20 +118,27 @@ class Prepare extends Component {
   };
 
   render() {
-    const { myPlayer, toggleReadyState } = this.props;
+    const { myKey, players } = this.props;
+    const myPlayer = players.find(player => player.key === myKey);
     return (
       <View style={styles.pageContainer}>
-        {myPlayer.isAdmin ? <AdminPanelPreGame /> : null}
-        <Text style={styles.titleText}>New Game</Text>
-        {this.renderPlayers()}
-        <Footer>
+        {/* Main Content */}
+        <View style={styles.mainContent}>
+          {myPlayer.isAdmin ? <AdminPanelPreGame /> : null}
+          <Text style={styles.titleText}>New Game</Text>
+          {this.renderPlayers()}
+        </View>
+        {/* Footer */}
+        <View>
           {this.renderLogs()}
           <FooterButton
-            onClick={toggleReadyState}
+            onClick={() => {
+              createEmitSocket('clientPlayerToggleReady');
+            }}
             buttonText={myPlayer.isReady ? 'CANCEL READY' : 'READY'}
             darkMode={myPlayer.isReady ? true : false}
           />
-        </Footer>
+        </View>
       </View>
     );
   }
@@ -144,7 +149,7 @@ class Prepare extends Component {
  */
 const mapStateToProps = state => {
   return {
-    myPlayer: state.preGame.myPlayer,
+    myKey: state.preGame.myKey,
     players: state.preGame.players,
     logs: state.preGame.logs
   };
@@ -153,7 +158,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     playersUpdateListener: () => dispatch(onPlayersUpdateAction()),
-    toggleReadyState: () => dispatch(toggledReadyStateAction())
+    gameStartListener: () => dispatch(onGameStartAction())
   };
 };
 

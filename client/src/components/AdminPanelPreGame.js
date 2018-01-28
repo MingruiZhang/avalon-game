@@ -12,22 +12,23 @@ import { createEmitSocket } from '../utils';
  */
 const styles = StyleSheet.create({
   panelContainer: {
-    position: 'absolute',
-    top: 20,
-    left: 10,
-    flexDirection: 'row'
+    position: 'fixed',
+    bottom: 200,
+    right: 10,
+    zIndex: 10
   },
   addButtonStyle: {
     backgroundColor: Styles.Color.SaffronYellow,
     height: 40,
     width: 40,
     borderRadius: '50%',
-    marginRight: 10
+    margin: 10
   },
   removeButtonStyle: {
     backgroundColor: Styles.Color.DeepGray,
     height: 40,
     width: 40,
+    margin: 10,
     borderRadius: '50%'
   },
   buttonText: {
@@ -44,6 +45,7 @@ export default class AdminPanelPreGame extends React.Component {
   render() {
     return (
       <View style={styles.panelContainer}>
+        {/* Add Dummy Player */}
         <TouchableOpacity
           style={styles.addButtonStyle}
           onPress={() => {
@@ -52,6 +54,7 @@ export default class AdminPanelPreGame extends React.Component {
         >
           <Text style={styles.buttonText}>+</Text>
         </TouchableOpacity>
+        {/* Remove Dummy Player */}
         <TouchableOpacity
           style={styles.removeButtonStyle}
           onPress={() => {

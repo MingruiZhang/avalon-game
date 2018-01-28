@@ -1,6 +1,6 @@
 'use strict';
 
-Object.defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, '__esModule', {
   value: true
 });
 
@@ -10,27 +10,29 @@ var _extends3 = _interopRequireDefault(_extends2);
 
 var _utils = require('./utils');
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : { default: obj };
+}
 
 // This is global scope
 var playerId = 0;
 var players = [];
 
 var doesNameExist = function doesNameExist(name) {
-  return players.some(function (player) {
+  return players.some(function(player) {
     return player.name === name;
   });
 };
 
 var removePlayerIndexByName = function removePlayerIndexByName(name) {
-  var index = players.findIndex(function (player) {
+  var index = players.findIndex(function(player) {
     return player.name === name;
   });
   players.splice(index, 1);
 };
 
 var allPlayersReady = function allPlayersReady() {
-  return players.every(function (player) {
+  return players.every(function(player) {
     return player.isReady;
   });
 };
@@ -44,27 +46,18 @@ var socketManager = function socketManager(socket) {
   // This will be scoped to each individual socket(user)
   var playerInfo = undefined;
 
-  socket.on('clientPlayerJoinedGame', function (data) {
+  socket.on('clientPlayerJoinedGame', function(data) {
     var name = data.name;
 
     if (!name.length) {
-      /**
-       * Join error: Name can't be empty
-       */
       socket.emit('serverPlayerJoinedError', {
         error: 'Please enter your nickname'
       });
     } else if (doesNameExist(name)) {
-      /**
-       * Join error: Name conflict with exist player
-       */
       socket.emit('serverPlayerJoinedError', {
         error: 'Nickname already taken in the game'
       });
     } else if (players.length >= 10) {
-      /**
-       * Join error: Already 10 players in game
-       */
       socket.emit('serverPlayerJoinedError', {
         error: 'Too many players in game'
       });
@@ -99,7 +92,7 @@ var socketManager = function socketManager(socket) {
     }
   });
 
-  socket.on('clientPlayerToggleReady', function () {
+  socket.on('clientPlayerToggleReady', function() {
     /**
      * Toggle ready state
      */
@@ -110,7 +103,6 @@ var socketManager = function socketManager(socket) {
     if (playerInfo.isReady && allPlayersReady()) {
       if (players.length < 6) {
         socketEmitAll(socket, 'serverUpdatePlayers', {
-          playerInfo: playerInfo,
           players: players,
           log: {
             message: '6+ players needed to start agame',
@@ -119,7 +111,6 @@ var socketManager = function socketManager(socket) {
         });
       } else {
         socketEmitAll(socket, 'serverUpdatePlayers', {
-          playerInfo: playerInfo,
           players: players,
           log: {
             message: 'Starting game in 5',
@@ -128,11 +119,13 @@ var socketManager = function socketManager(socket) {
         });
       }
     } else {
-      socketEmitAll(socket, 'serverUpdatePlayers', { playerInfo: playerInfo, players: players });
+      socketEmitAll(socket, 'serverUpdatePlayers', {
+        players: players
+      });
     }
   });
 
-  socket.on('disconnect', function () {
+  socket.on('disconnect', function() {
     if (playerInfo) {
       removePlayerIndexByName(playerInfo.name);
 
@@ -149,7 +142,7 @@ var socketManager = function socketManager(socket) {
   /**
    * ADMIN FEATURES:
    */
-  socket.on('clientAddDummyPlayers', function () {
+  socket.on('clientAddDummyPlayers', function() {
     var randomName = (0, _utils.getRandomDummyName)() + ('-' + playerId++);
     var dummyPlayer = {
       name: randomName,

@@ -11,8 +11,10 @@ const styles = StyleSheet.create({
     ...Styles.defaultTextStyles,
     fontFamily: Styles.FontFamily.SanFranciscoBold,
     backgroundColor: Styles.Color.SaffronYellow,
+    borderRadius: 8,
     color: Styles.Color.DeepGray,
-    padding: 16
+    padding: 16,
+    margin: 12
   },
   darkMode: {
     fontFamily: Styles.FontFamily.SanFranciscoRegular,
@@ -33,9 +35,7 @@ export default class FooterButton extends React.Component {
 
   render() {
     const { onClick, buttonText, darkMode } = this.props;
-    const buttonStyle = darkMode
-      ? [styles.button, styles.darkMode]
-      : styles.button;
+    const buttonStyle = darkMode ? [styles.button, styles.darkMode] : styles.button;
     return (
       <TouchableOpacity onPress={onClick}>
         <Text style={buttonStyle}>{buttonText}</Text>

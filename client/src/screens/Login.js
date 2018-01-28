@@ -1,59 +1,49 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { joinGameAction } from '../actions/preGameActions';
+import { onJoinGameAction } from '../actions/preGameActions';
 import { func, string } from 'prop-types';
-import { fetchAvatar } from '../utils';
+import { createEmitSocket, fetchAvatar } from '../utils';
 import { StyleSheet, Text, View, Image, TextInput } from 'react-native';
 import * as Styles from '../styles';
-
 import FooterButton from '../components/FooterButton';
-import Footer from '../components/Footer';
 
 /**
  * Stylesheet
  */
 const styles = StyleSheet.create({
   pageContainer: {
+    flex: 1
+  },
+  mainContent: {
     flex: 1,
-    paddingTop: 40
+    paddingTop: 100
   },
   titleSubText: {
     ...Styles.defaultTextStyles,
-    fontFamily: Styles.FontFamily.SanFranciscoBold,
+    paddingTop: 8,
     fontSize: 17
   },
   titleMainText: {
     color: Styles.Color.SaffronYellow,
     fontFamily: Styles.FontFamily.Homestead,
     alignSelf: 'center',
-    fontSize: 40
+    fontSize: 32
   },
   avatarContainer: {
     alignSelf: 'center',
-    marginTop: 32
+    marginTop: 60
   },
   nickNameInput: {
     ...Styles.defaultTextStyles,
     alignSelf: 'center',
     borderBottomColor: Styles.Color.SaffronYellow,
     borderBottomWidth: 2,
-    marginTop: 40,
+    marginTop: 60,
     paddingBottom: 6,
     outline: 'none'
   },
   inputError: {
     borderBottomColor: Styles.Color.WarningRed
-  },
-  footerButton: {
-    flex: 1,
-    justifyContent: 'flex-end'
-  },
-  nextButtonText: {
-    ...Styles.defaultTextStyles,
-    fontFamily: Styles.FontFamily.SanFranciscoBold,
-    backgroundColor: Styles.Color.SaffronYellow,
-    color: Styles.Color.DeepGray,
-    padding: 10
   },
   errorMessgae: {
     ...Styles.defaultTextStyles,
@@ -69,7 +59,7 @@ const styles = StyleSheet.create({
 class Login extends React.Component {
   static propTypes = {
     error: string,
-    joinGame: func.isRequired
+    joinGameListener: func.isRequired
   };
 
   state = {
@@ -78,15 +68,19 @@ class Login extends React.Component {
     avatarId: Math.floor(Math.random() * 12) + 1
   };
 
+  constructor(props) {
+    super(props);
+    const { joinGameListener } = props;
+    joinGameListener();
+  }
+
   handleJoinGame = () => {
-    const { joinGame } = this.props;
     const { name, avatarId } = this.state;
 
     this.setState({
       onInit: true
     });
-
-    joinGame({ name, avatarId });
+    createEmitSocket('clientPlayerJoinedGame', { name, avatarId });
   };
 
   render() {
@@ -95,31 +89,29 @@ class Login extends React.Component {
     const showError = error && onInit;
     return (
       <View style={styles.pageContainer}>
-        <Text style={styles.titleSubText}> Welcome to </Text>
-        <Text style={styles.titleMainText}> Avalon </Text>
-        <View style={styles.avatarContainer}>
-          <Image
-            source={{
-              uri: fetchAvatar(avatarId),
-              height: 140,
-              width: 140
-            }}
+        {/* Main Content */}
+        <View style={styles.mainContent}>
+          <Text style={styles.titleMainText}>Welcome to Avalon</Text>
+          <Text style={styles.titleSubText}>Please set up your profile</Text>
+          <View style={styles.avatarContainer}>
+            <Image
+              source={{
+                uri: fetchAvatar(avatarId),
+                height: 160,
+                width: 160
+              }}
+            />
+          </View>
+          <TextInput
+            style={[styles.nickNameInput, showError && styles.inputError]}
+            onChangeText={text => this.setState({ name: text, onInit: false })}
+            placeholder="Nickname"
+            autoCapitalize="words"
           />
+          {showError ? <Text style={styles.errorMessgae}>{error}</Text> : null}
         </View>
-        <TextInput
-          style={
-            showError
-              ? [styles.nickNameInput, styles.inputError]
-              : styles.nickNameInput
-          }
-          onChangeText={text => this.setState({ name: text, onInit: false })}
-          placeholder="Nickname"
-          autoCapitalize="words"
-        />
-        {showError ? <Text style={styles.errorMessgae}>{error}</Text> : null}
-        <Footer>
-          <FooterButton onClick={this.handleJoinGame} buttonText="NEXT" />
-        </Footer>
+        {/* Footer */}
+        <FooterButton onClick={this.handleJoinGame} buttonText="NEXT" />
       </View>
     );
   }
@@ -136,7 +128,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    joinGame: name => dispatch(joinGameAction(name))
+    joinGameListener: name => dispatch(onJoinGameAction(name))
   };
 };
 

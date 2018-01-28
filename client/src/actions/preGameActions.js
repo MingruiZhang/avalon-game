@@ -1,6 +1,6 @@
-import { createOnSocketCallBack, createEmitSocket } from '../utils';
+import { createOnSocketCallBack } from '../utils';
 
-export const joinGameAction = data => {
+export const onJoinGameAction = data => {
   return dispatch => {
     createOnSocketCallBack('serverPlayerJoinedSuccess', payload => {
       dispatch({ type: 'JOIN_GAME_SUCCESS', payload });
@@ -8,7 +8,6 @@ export const joinGameAction = data => {
     createOnSocketCallBack('serverPlayerJoinedError', payload => {
       dispatch({ type: 'JOIN_GAME_ERROR', payload });
     });
-    createEmitSocket('clientPlayerJoinedGame', data);
   };
 };
 
@@ -20,9 +19,10 @@ export const onPlayersUpdateAction = () => {
   };
 };
 
-export const toggledReadyStateAction = () => {
+export const onGameStartAction = () => {
   return dispatch => {
-    createEmitSocket('clientPlayerToggleReady');
-    dispatch({ type: 'TOGGLE_READY_STATE' });
+    createOnSocketCallBack('serverGameStart', payload => {
+      dispatch({ type: 'GAME_STARTED', payload });
+    });
   };
 };
