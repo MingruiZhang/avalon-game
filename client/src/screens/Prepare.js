@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { array, func, string } from 'prop-types';
-import { onPlayersUpdateAction, onGameStartAction } from '../actions/preGameActions';
+import { onPlayersUpdateAction, onGameStartAction } from '../redux/preGame';
 import { StyleSheet, Text, View } from 'react-native';
 import * as Styles from '../styles';
 

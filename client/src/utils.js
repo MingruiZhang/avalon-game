@@ -11,10 +11,12 @@ export const isDevEnv = process.env.NODE_ENV && process.env.NODE_ENV === 'develo
 const socket = isDevEnv ? io('http://localhost:3001') : io();
 
 export const createOnSocketCallBack = (eventName, cb) => {
+  console.log('createOnSocketCallBack : ', eventName, socket);
   socket.on(eventName, payload => cb(payload));
 };
 
 export const createEmitSocket = (eventName, data) => {
+  console.log('createEmitSocket : ', eventName, socket);
   socket.emit(eventName, data);
 };
 
@@ -38,13 +40,11 @@ export const deduplicateJoinArray = array => {
     }
   }
   for (const key in dict) {
-    console.log('key: ', key);
     if (dict[key] > 1) {
       result.push(`${key} × ${dict[key]}`);
     } else {
       result.push(key);
     }
   }
-  console.log('result: ', result);
   return result.join(', ');
 };

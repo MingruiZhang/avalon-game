@@ -1,3 +1,7 @@
+export const createSocketController = (socket, eventName, controller) => {
+  return socket.on(eventName, data => controller(socket, data));
+}
+
 export const socketEmitAll = (socket, eventName, data) => {
   socket.broadcast.emit(eventName, data);
   socket.emit(eventName, data);

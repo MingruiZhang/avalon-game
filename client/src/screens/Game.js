@@ -5,7 +5,7 @@ import { createEmitSocket, deduplicateJoinArray, fetchAvatar } from '../utils';
 import { StyleSheet, Text, View, Image, TextInput } from 'react-native';
 import * as Styles from '../styles';
 import FooterButton from '../components/FooterButton';
-import { onGameUpdateAction, onGameEndAction } from '../actions/gameActions';
+import { onGameUpdateAction, onGameEndAction } from '../redux/game';
 import Modal from 'react-responsive-modal';
 import Player from '../components/Player';
 

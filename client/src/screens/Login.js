@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { onJoinGameAction } from '../actions/preGameActions';
+import { onJoinGameAction } from '../redux/preGame';
 import { func, string } from 'prop-types';
 import { createEmitSocket, fetchAvatar } from '../utils';
 import { StyleSheet, Text, View, Image, TextInput } from 'react-native';
@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 100,
     paddingBottom: 40,
-    overflowX: 'scroll'
+    overflowY: 'auto'
   },
   titleSubText: {
     ...Styles.defaultTextStyles,
@@ -78,11 +78,8 @@ class Login extends React.Component {
 
   handleJoinGame = () => {
     const { name, avatarId } = this.state;
-
-    this.setState({
-      onInit: true
-    });
-    createEmitSocket('clientPlayerJoinedGame', { name, avatarId });
+    this.setState({ onInit: true });
+    createEmitSocket('clientPlayerJoinGame', { name, avatarId });
   };
 
   render() {

@@ -6,7 +6,7 @@ import logger from 'redux-logger';
 import thunk from 'redux-thunk';
 
 import Main from './screens';
-import reducer from './reducers';
+import reducer from './redux';
 import './index.css';
 import { isDevEnv } from './utils';
 
