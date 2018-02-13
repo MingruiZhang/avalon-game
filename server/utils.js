@@ -1,12 +1,20 @@
+
+/**
+ * Create socket on listener on given event name using given controller
+ */
 export const createSocketController = (socket, eventName, controller) => {
   return socket.on(eventName, data => controller(socket, data));
 }
-
-export const socketEmitAll = (socket, eventName, data) => {
-  socket.broadcast.emit(eventName, data);
-  socket.emit(eventName, data);
+/**
+ * socket emit to everyone
+ */
+export const socketEmitAll = (socket, eventName, emitData) => {
+  socket.broadcast.emit(eventName, emitData);
+  socket.emit(eventName, emitData);
 };
-
+/**
+ * Shuffle array
+ */
 export const shuffleArray = array => {
   // Let keep a copy so we don't change the original array
   const newArray = [...array];
