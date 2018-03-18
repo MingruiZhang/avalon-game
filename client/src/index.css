@@ -1,3 +1,24 @@
+@font-face {
+  font-family: 'Homestead';
+  font-style: normal;
+  font-weight: normal;
+  src: url('./assets/fonts/Homestead-Regular.ttf');
+}
+
+@font-face {
+  font-family: 'SanFrancisco Regular';
+  font-style: normal;
+  font-weight: normal;
+  src: url('./assets/fonts/SanFranciscoText-Regular.otf');
+}
+
+@font-face {
+  font-family: 'SanFrancisco Bold';
+  font-style: normal;
+  font-weight: normal;
+  src: url('./assets/fonts/SanFranciscoText-Bold.otf');
+}
+
 html,
 body {
   margin: 0;

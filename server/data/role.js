@@ -1,4 +1,6 @@
-export const SPECIALITY = Object.freeze({
+import deepFreeze from 'deep-freeze';
+
+export const SPECIALITY = deepFreeze({
   HAS_MAGIC: 1, // MERLIN and MIRGANA has magic
   DETECT_MAGIC: 2, // PERCIVAL can detect magic
   KILL_MERLIN: 3, // ASSASSIN can kill MERLIN end of game
@@ -7,41 +9,32 @@ export const SPECIALITY = Object.freeze({
   IS_MERLIN: 6 // MERLIN
 });
 
-class roleClass {
-  constructor({ name, isEvil, specialities, description }) {
-    this.name = name;
-    this.isEvil = isEvil;
-    this.specialities = specialities;
-    this.description = description;
-  }
-}
-
 // Bad side
-const ASSASSIN = new roleClass({
+const ASSASSIN = deepFreeze({
   name: 'Assassin',
   isEvil: true,
   specialities: [SPECIALITY.KILL_MERLIN],
   description: 'You can kill Merlin'
 });
-const MORGANA = new roleClass({
+const MORGANA = deepFreeze({
   name: 'Morgana',
   isEvil: true,
   specialities: [SPECIALITY.HAS_MAGIC],
   description: 'You appears as Merlin'
 });
-const MORDRED = new roleClass({
+const MORDRED = deepFreeze({
   name: 'Mordred',
   isEvil: true,
   specialities: [SPECIALITY.IS_HIDDEN],
   description: 'You are unknown to Merlin'
 });
-const OBERON = new roleClass({
+const OBERON = deepFreeze({
   name: 'Oberon',
   isEvil: true,
   specialities: [SPECIALITY.BRAINLESS],
   description: 'You are unknown to evil'
 });
-const BAD_1 = new roleClass({
+const BAD_1 = deepFreeze({
   name: 'Minion of Mordred',
   isEvil: true,
   specialities: [],
@@ -49,37 +42,37 @@ const BAD_1 = new roleClass({
 });
 
 // Good side
-const MERLIN = new roleClass({
+const MERLIN = deepFreeze({
   name: 'Merlin',
   isEvil: false,
   specialities: [SPECIALITY.IS_MERLIN, SPECIALITY.HAS_MAGIC],
   description: 'You know evil'
 });
-const PERCIVAL = new roleClass({
+const PERCIVAL = deepFreeze({
   name: 'Percival',
   isEvil: false,
   specialities: [SPECIALITY.DETECT_MAGIC],
   description: 'You can detect people with magic'
 });
-const GOOD_1 = new roleClass({
+const GOOD_1 = deepFreeze({
   name: 'Servant of Arthur',
   isEvil: false,
   specialities: [],
   description: 'You know nothing :)'
 });
-const GOOD_2 = new roleClass({
+const GOOD_2 = deepFreeze({
   name: 'Servant of Arthur',
   isEvil: false,
   specialities: [],
   description: 'You know nothing :)'
 });
-const GOOD_3 = new roleClass({
+const GOOD_3 = deepFreeze({
   name: 'Servant of Arthur',
   isEvil: false,
   specialities: [],
   description: 'You know nothing :)'
 });
-const GOOD_4 = new roleClass({
+const GOOD_4 = deepFreeze({
   name: 'Servant of Arthur',
   isEvil: false,
   specialities: [],
