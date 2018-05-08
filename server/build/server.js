@@ -36,6 +36,8 @@ app.set('port', PORT);
 // Socket.io connection
 io.on('connection', _socketManager2.default);
 
+/* eslint-disable no-console */
 server.listen(PORT, function () {
   console.log('Server listening at port %d', PORT);
 });
+/* eslint-enable no-console */
