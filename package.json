@@ -6,7 +6,7 @@
   "author": "Mingrui Zhang",
   "license": "MIT",
   "engines": {
-    "node": "8.11.1"
+    "node": "^8.9.0"
   },
   "dependencies": {
     "concurrently": "^3.1.0",
