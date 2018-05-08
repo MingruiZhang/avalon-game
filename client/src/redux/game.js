@@ -1,5 +1,5 @@
 import { FAKE_GAME_STATE } from '../fake';
-import { createOnSocketCallBack } from '../utils';
+import { socket } from '../utils';
 
 const DEFAULT_STATE = {
   gameState: [],
@@ -7,7 +7,7 @@ const DEFAULT_STATE = {
   gameStarted: false
 };
 
-export default function reducer(state = DEFAULT_STATE, action) {
+export default function reducer(state = FAKE_GAME_STATE, action) {
   switch (action.type) {
     case 'GAME_STARTED':
       return {
@@ -27,15 +27,23 @@ export default function reducer(state = DEFAULT_STATE, action) {
 
 export const onGameUpdateAction = () => {
   return dispatch => {
-    createOnSocketCallBack('serverGameUpdate', payload => {
+    socket.on('serverGameUpdate', payload => {
       dispatch({ type: 'GAME_UPDATED', payload });
+    });
+  };
+};
+
+export const onGameStartAction = () => {
+  return dispatch => {
+    socket.on('serverGameStart', payload => {
+      dispatch({ type: 'GAME_STARTED', payload });
     });
   };
 };
 
 export const onGameEndAction = () => {
   return dispatch => {
-    createOnSocketCallBack('serverGameEnd', payload => {
+    socket.on('serverGameEnd', payload => {
       dispatch({ type: 'GAME_ENDED', payload });
     });
   };

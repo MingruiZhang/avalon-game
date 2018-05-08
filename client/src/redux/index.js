@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 
-import preGame from './preGame';
+import player from './player';
 import game from './game';
 
-export default combineReducers({ preGame, game });
+export default combineReducers({ player, game });

@@ -6,10 +6,11 @@
   "author": "Mingrui Zhang",
   "license": "MIT",
   "engines": {
-    "node": "8.9.0"
+    "node": "^8.9.0"
   },
   "dependencies": {
     "concurrently": "^3.1.0",
+    "npm": "^6.0.0",
     "rimraf": "^2.5.4"
   },
   "scripts": {
@@ -21,9 +22,8 @@
     "start:prod": "cd server && npm run start:prod"
   },
   "devDependencies": {
+    "babel-eslint": "^8.2.2",
     "eslint": "^4.19.0",
-    "eslint-config-standard": "^11.0.0",
-    "eslint-plugin-promise": "^3.7.0",
-    "eslint-plugin-standard": "^3.0.1"
+    "eslint-plugin-react": "^7.7.0"
   }
 }

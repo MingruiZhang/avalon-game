@@ -5,7 +5,7 @@
 import React from 'react';
 import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
 import * as Styles from '../styles';
-import { createEmitSocket } from '../utils';
+import { func } from 'prop-types';
 
 /**
  * Stylesheet
@@ -42,7 +42,11 @@ const styles = StyleSheet.create({
  * React Component
  */
 export default class AdminPanelPreGame extends React.Component {
+  static propTypes = {
+    createEmitSocket: func.isRequired,
+  };
   render() {
+    const { createEmitSocket } = this.props;
     return (
       <View style={styles.panelContainer}>
         {/* Add Dummy Player */}

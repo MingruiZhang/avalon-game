@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { array, func, string } from 'prop-types';
-import { onPlayersUpdateAction, onGameStartAction } from '../redux/preGame';
+import { createEmitSocket, onPlayersUpdateAction } from '../redux/player';
+import { onGameStartAction } from '../redux/game';
 import { StyleSheet, Text, View } from 'react-native';
 import * as Styles from '../styles';
 
 import Player from '../components/Player';
 import FooterButton from '../components/FooterButton';
 import AdminPanelPreGame from '../components/AdminPanelPreGame';
-import { createEmitSocket } from '../utils';
 
 /**
  * Stylesheet
@@ -65,28 +65,29 @@ const styles = StyleSheet.create({
  */
 class Prepare extends Component {
   static propTypes = {
-    myKey: string.isRequired,
+    myName: string.isRequired,
     players: array.isRequired,
     logs: array.isRequired,
-    playersUpdateListener: func.isRequired,
-    gameStartListener: func.isRequired
+    createEmitSocket: func.isRequired,
+    onPlayersUpdateAction: func.isRequired,
+    onGameStartAction: func.isRequired
   };
 
   constructor(props) {
     super(props);
-    const { playersUpdateListener, gameStartListener } = props;
-    playersUpdateListener();
-    gameStartListener();
+    const { onPlayersUpdateAction, onGameStartAction } = props;
+    onPlayersUpdateAction();
+    onGameStartAction();
   }
 
   renderPlayers = () => {
-    const { myKey, players } = this.props;
+    const { myName, players } = this.props;
     return (
       <View style={styles.playerList}>
         {players.map(player => {
           return (
-            <View style={styles.playerItem} key={player.key}>
-              <Player player={player} isMe={player.key === myKey} />
+            <View style={styles.playerItem} key={player.name}>
+              <Player player={player} isMe={player.name === myName} />
             </View>
           );
         })}
@@ -118,13 +119,13 @@ class Prepare extends Component {
   };
 
   render() {
-    const { myKey, players } = this.props;
-    const myPlayer = players.find(player => player.key === myKey);
+    const { myName, players, createEmitSocket } = this.props;
+    const myPlayer = players.find(player => player.name === myName);
     return (
       <View style={styles.pageContainer}>
         {/* Main Content */}
         <View style={styles.mainContent}>
-          {myPlayer.isAdmin ? <AdminPanelPreGame /> : null}
+          {myPlayer.isAdmin ? <AdminPanelPreGame createEmitSocket={createEmitSocket} /> : null}
           <Text style={styles.titleText}>New Game</Text>
           {this.renderPlayers()}
         </View>
@@ -133,7 +134,7 @@ class Prepare extends Component {
           {this.renderLogs()}
           <FooterButton
             onClick={() => {
-              createEmitSocket('clientPlayerToggleReady');
+              createEmitSocket('clientPlayerToggleReady', { isReady: !myPlayer.isReady });
             }}
             buttonText={myPlayer.isReady ? 'CANCEL READY' : 'READY'}
             darkMode={myPlayer.isReady ? true : false}
@@ -149,17 +150,16 @@ class Prepare extends Component {
  */
 const mapStateToProps = state => {
   return {
-    myKey: state.preGame.myKey,
-    players: state.preGame.players,
-    logs: state.preGame.logs
+    myName: state.player.myName,
+    players: state.player.players,
+    logs: state.player.logs
   };
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    playersUpdateListener: () => dispatch(onPlayersUpdateAction()),
-    gameStartListener: () => dispatch(onGameStartAction())
-  };
+const mapDispatchToProps = {
+  createEmitSocket: createEmitSocket,
+  onPlayersUpdateAction: onPlayersUpdateAction,
+  onGameStartAction: onGameStartAction
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Prepare);

@@ -1,3 +1,8 @@
-import { createStore, combineReducers } from 'redux'
+import { applyMiddleware, createStore, combineReducers } from 'redux';
+import playerData from './playerData';
+import gameData from './gameData';
+import thunk from 'redux-thunk';
 
-const store = createStore(counter)
+export default createStore(
+	combineReducers({ playerData, gameData }), applyMiddleware(thunk)
+);

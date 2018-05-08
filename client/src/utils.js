@@ -8,17 +8,7 @@ export const isDevEnv = process.env.NODE_ENV && process.env.NODE_ENV === 'develo
 /**
  * Socket related util functions
  */
-const socket = isDevEnv ? io('http://localhost:3001') : io();
-
-export const createOnSocketCallBack = (eventName, cb) => {
-  console.log('createOnSocketCallBack : ', eventName, socket);
-  socket.on(eventName, payload => cb(payload));
-};
-
-export const createEmitSocket = (eventName, data) => {
-  console.log('createEmitSocket : ', eventName, socket);
-  socket.emit(eventName, data);
-};
+export const socket = isDevEnv ? io('http://localhost:3001') : io();
 
 /**
  * Avatars are stored locally, util function to its path

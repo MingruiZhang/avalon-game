@@ -1,13 +1,19 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { bool, string } from 'prop-types';
 import { BrowserRouter, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Prepare from './Prepare';
 import Login from './Login';
 import Game from './Game';
 
-class Main extends Component {
+class Main extends React.Component {
+  static propTypes = {
+    myName: string,
+    gameStarted: bool.isRequired
+  };
+
   render() {
-    const { joinedGame, gameStarted } = this.props;
+    const { myName, gameStarted } = this.props;
     return (
       <BrowserRouter>
         <Route
@@ -16,7 +22,7 @@ class Main extends Component {
             if (gameStarted) {
               return <Game />;
             } else {
-              return joinedGame ? <Prepare /> : <Login />;
+              return myName ? <Prepare /> : <Login />;
             }
           }}
         />
@@ -27,7 +33,7 @@ class Main extends Component {
 
 const mapStateToProps = state => {
   return {
-    joinedGame: state.preGame.joinedGame,
+    myName: state.player.myName,
     gameStarted: state.game.gameStarted
   };
 };

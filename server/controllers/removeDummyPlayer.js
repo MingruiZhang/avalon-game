@@ -1,16 +1,19 @@
-import { socketEmitAll } from '../utils';
-import * as PlayerStore from '../data/player';
-
 // ADMIN FEATURE
-export default function controller(socket, data) {
-  const removedDummy = PlayerStore.removeDummyPlayer();
-  if (removedDummy) {
-    socketEmitAll(socket, 'serverUpdatePlayers', {
-      players: PlayerStore.allPlayers(),
-      log: {
-        message: `${removedDummy} left the game`,
-        type: 'normal'
-      }
-    });
-  }
+import { socketEmitAll } from '../utils';
+
+import store from '../redux';
+import { removeDummyPlayer } from '../redux/playerData';
+
+export default function controller(socket) {
+  store.dispatch(removeDummyPlayer()).then(dummyName => {
+    if (dummyName) {
+      socketEmitAll(socket, 'serverUpdatePlayers', {
+        players: store.getState().playerData.players,
+        log: {
+          message: `${dummyName} left the game`,
+          type: 'normal'
+        }
+      });
+    }
+  });
 }

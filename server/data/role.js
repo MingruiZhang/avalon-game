@@ -1,6 +1,6 @@
 import deepFreeze from 'deep-freeze';
 
-export const SPECIALITY = deepFreeze({
+export const Speciality = deepFreeze({
   HAS_MAGIC: 1, // MERLIN and MIRGANA has magic
   DETECT_MAGIC: 2, // PERCIVAL can detect magic
   KILL_MERLIN: 3, // ASSASSIN can kill MERLIN end of game
@@ -11,69 +11,69 @@ export const SPECIALITY = deepFreeze({
 
 // Bad side
 const ASSASSIN = deepFreeze({
-  name: 'Assassin',
+  roleName: 'Assassin',
   isEvil: true,
-  specialities: [SPECIALITY.KILL_MERLIN],
-  description: 'You can kill Merlin'
+  specialities: [Speciality.KILL_MERLIN],
+  description: 'You can kill Merlin, your teammates are'
 });
 const MORGANA = deepFreeze({
-  name: 'Morgana',
+  roleName: 'Morgana',
   isEvil: true,
-  specialities: [SPECIALITY.HAS_MAGIC],
-  description: 'You appears as Merlin'
+  specialities: [Speciality.HAS_MAGIC],
+  description: 'You appears as Merlin, your teammates are'
 });
 const MORDRED = deepFreeze({
-  name: 'Mordred',
+  roleName: 'Mordred',
   isEvil: true,
-  specialities: [SPECIALITY.IS_HIDDEN],
-  description: 'You are unknown to Merlin'
+  specialities: [Speciality.IS_HIDDEN],
+  description: 'You are unknown to Merlin, your teammates are'
 });
 const OBERON = deepFreeze({
-  name: 'Oberon',
+  roleName: 'Oberon',
   isEvil: true,
-  specialities: [SPECIALITY.BRAINLESS],
-  description: 'You are unknown to evil'
+  specialities: [Speciality.BRAINLESS],
+  description: 'You know nothing :)'
 });
 const BAD_1 = deepFreeze({
-  name: 'Minion of Mordred',
+  roleName: 'Minion of Mordred',
   isEvil: true,
   specialities: [],
-  description: 'You are plain evil'
+  description: 'You are plain evil, your teammates are'
 });
 
 // Good side
 const MERLIN = deepFreeze({
-  name: 'Merlin',
+  roleName: 'Merlin',
   isEvil: false,
-  specialities: [SPECIALITY.IS_MERLIN, SPECIALITY.HAS_MAGIC],
-  description: 'You know evil'
+  specialities: [Speciality.IS_MERLIN, Speciality.HAS_MAGIC],
+  description: 'You know evil, they are'
 });
 const PERCIVAL = deepFreeze({
-  name: 'Percival',
+  roleName: 'Percival',
   isEvil: false,
-  specialities: [SPECIALITY.DETECT_MAGIC],
-  description: 'You can detect people with magic'
+  specialities: [Speciality.DETECT_MAGIC],
+  description: 'You can detect people with magic, they are'
 });
 const GOOD_1 = deepFreeze({
-  name: 'Servant of Arthur',
+  roleName: 'Servant of Arthur',
   isEvil: false,
   specialities: [],
   description: 'You know nothing :)'
 });
 const GOOD_2 = deepFreeze({
-  name: 'Servant of Arthur',
+  roleName: 'Servant of Arthur',
   isEvil: false,
   specialities: [],
   description: 'You know nothing :)'
 });
 const GOOD_3 = deepFreeze({
-  name: 'Servant of Arthur',
+  roleName: 'Servant of Arthur',
   isEvil: false,
   specialities: [],
   description: 'You know nothing :)'
 });
 const GOOD_4 = deepFreeze({
-  name: 'Servant of Arthur',
+  roleName: 'Servant of Arthur',
   isEvil: false,
   specialities: [],
   description: 'You know nothing :)'

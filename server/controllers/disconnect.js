@@ -5,7 +5,7 @@ import * as GameStore from '../data/game';
 const tooLessPlayers  = () => PlayerStore.allPlayers().length < 4;
 const noRealPlayer = () => PlayerStore.allPlayers().findIndex(player => player.isDummy) >= 0;
 
-export default function controller(socket, data) {
+export default function controller(socket) {
   const { playerInfo } = socket;
   if (playerInfo) {
     PlayerStore.removePlayerIndexByName(playerInfo.name);

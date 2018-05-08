@@ -1,10 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { array, func, string, object } from 'prop-types';
-import { createEmitSocket, deduplicateJoinArray, fetchAvatar } from '../utils';
-import { StyleSheet, Text, View, Image, TextInput } from 'react-native';
+import { deduplicateJoinArray, fetchAvatar } from '../utils';
+import { StyleSheet, Text, View, Image } from 'react-native';
 import * as Styles from '../styles';
-import FooterButton from '../components/FooterButton';
 import { onGameUpdateAction, onGameEndAction } from '../redux/game';
 import Modal from 'react-responsive-modal';
 import Player from '../components/Player';
@@ -105,19 +104,19 @@ const styles = StyleSheet.create({
  */
 class Game extends React.Component {
   static propTypes = {
-    myKey: string.isRequired,
+    myName: string.isRequired,
     players: array.isRequired,
     gameSetup: object.isRequired,
-    gameUpdateListener: func.isRequired,
-    gameEndListener: func.isRequired
+    onGameUpdateAction: func.isRequired,
+    onGameEndAction: func.isRequired
   };
 
   constructor(props) {
     super(props);
-    const { gameUpdateListener, gameEndListener, players, myKey } = props;
-    gameUpdateListener();
-    gameEndListener();
-    const myPlayer = players.find(player => player.key === myKey);
+    const { onGameUpdateAction, onGameEndAction, players, myName } = props;
+    onGameUpdateAction();
+    onGameEndAction();
+    const myPlayer = players.find(player => player.name === myName);
     this.state = { myPlayer, open: true };
   }
 
@@ -189,7 +188,7 @@ class Game extends React.Component {
   }
 
   _renderCurrentStatus() {
-    const { gameSetup, gameState } = this.props;
+    // const { gameSetup, gameState } = this.props;
     return (
       <View style={styles.currentStateContainer}>
         <Text style={styles.sectionHeader}>STATUS</Text>
@@ -198,13 +197,12 @@ class Game extends React.Component {
   }
 
   _renderInfoModal() {
-    const { myPlayer, open } = this.state;
+    const { myPlayer: { roleInfo }, open } = this.state;
     const { players } = this.props;
-    const overviewInfo = myPlayer.info.overviewInfo;
-    const myInfo = myPlayer.info.yourInfo;
+    const overviewInfo = roleInfo.overviewInfo;
     const goodIcon = require('../assets/icons/good.png');
     const badIcon = require('../assets/icons/evil.png');
-    const myIcon = myInfo.roleIsEvil ? badIcon : goodIcon;
+    const myIcon = roleInfo.isEvil ? badIcon : goodIcon;
     return (
       <Modal
         classNames={{ modal: 'modalContainer', closeIcon: 'closeIcon' }}
@@ -218,16 +216,16 @@ class Game extends React.Component {
           <View style={styles.withIcon}>
             <Text style={styles.modalAboutYouText}>
               <Text>You are </Text>
-              <Text style={styles.colorYellow}>{myInfo.roleName}</Text>
+              <Text style={styles.colorYellow}>{roleInfo.roleName}</Text>
             </Text>
             <Image source={{ uri: myIcon, height: 48, width: 48 }} />
           </View>
-          <Text style={[styles.modalAboutYouText, styles.marginBottom10]}>{myInfo.knowMessage}</Text>
-          {myInfo.knowPlayers ? (
+          <Text style={[styles.modalAboutYouText, styles.marginBottom10]}>{roleInfo.description}</Text>
+          {roleInfo.knowPlayers ? (
             <View>
-              {myInfo.knowPlayers.map(playerKey => {
-                const playerInfo = players.find(player => player.key === playerKey);
-                return <Player player={playerInfo} key={playerInfo.key} withReady={false} listView={true} />;
+              {roleInfo.knowPlayers.map(playerName => {
+                const playerInfo = players.find(player => player.name === playerName);
+                return <Player player={playerInfo} key={playerInfo.name} withReady={false} listView={true} />;
               })}
             </View>
           ) : null}
@@ -261,18 +259,16 @@ class Game extends React.Component {
  */
 const mapStateToProps = state => {
   return {
-    myKey: state.preGame.myKey,
-    players: state.preGame.players,
+    myName: state.player.myName,
+    players: state.player.players,
     gameSetup: state.game.gameSetup,
     gameState: state.game.gameState
   };
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    gameUpdateListener: () => dispatch(onGameUpdateAction()),
-    gameEndListener: () => dispatch(onGameEndAction())
-  };
+const mapDispatchToProps = {
+  onGameUpdateAction: onGameUpdateAction,
+  onGameEndAction: onGameEndAction
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Game);

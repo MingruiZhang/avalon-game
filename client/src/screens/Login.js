@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { onJoinGameAction } from '../redux/preGame';
+import { createEmitSocket, onJoinGameAction } from '../redux/player';
 import { func, string } from 'prop-types';
-import { createEmitSocket, fetchAvatar } from '../utils';
+import { fetchAvatar } from '../utils';
 import { StyleSheet, Text, View, Image, TextInput } from 'react-native';
 import * as Styles from '../styles';
 import FooterButton from '../components/FooterButton';
@@ -61,7 +61,8 @@ const styles = StyleSheet.create({
 class Login extends React.Component {
   static propTypes = {
     error: string,
-    joinGameListener: func.isRequired
+    onJoinGameAction: func.isRequired,
+    createEmitSocket: func.isRequired
   };
 
   state = {
@@ -72,11 +73,12 @@ class Login extends React.Component {
 
   constructor(props) {
     super(props);
-    const { joinGameListener } = props;
-    joinGameListener();
+    const { onJoinGameAction } = props;
+    onJoinGameAction();
   }
 
   handleJoinGame = () => {
+    const { createEmitSocket } = this.props;
     const { name, avatarId } = this.state;
     this.setState({ onInit: true });
     createEmitSocket('clientPlayerJoinGame', { name, avatarId });
@@ -121,14 +123,13 @@ class Login extends React.Component {
  */
 const mapStateToProps = state => {
   return {
-    error: state.preGame.error
+    error: state.player.error
   };
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    joinGameListener: name => dispatch(onJoinGameAction(name))
-  };
+const mapDispatchToProps = {
+  onJoinGameAction: onJoinGameAction,
+  createEmitSocket: createEmitSocket
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);
